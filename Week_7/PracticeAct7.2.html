@@ -1,0 +1,3073 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>1.1 Notice in the Column Transformer, we added the argument handle_unknown=’ignore’What did this accomplish?</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="PracticeAct7.2_files/libs/clipboard/clipboard.min.js"></script>
+<script src="PracticeAct7.2_files/libs/quarto-html/quarto.js"></script>
+<script src="PracticeAct7.2_files/libs/quarto-html/popper.min.js"></script>
+<script src="PracticeAct7.2_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="PracticeAct7.2_files/libs/quarto-html/anchor.min.js"></script>
+<link href="PracticeAct7.2_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="PracticeAct7.2_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="PracticeAct7.2_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="PracticeAct7.2_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="PracticeAct7.2_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">1.1 Notice in the Column Transformer, we added the argument handle_unknown=’ignore’What did this accomplish?</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="11afc3e3" class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">---</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>title: Practice Activity <span class="fl">7.2</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>author: Sneha Narayanan</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">format</span>:</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    html:</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        toc: true</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        code<span class="op">-</span>fold: true</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>embed<span class="op">-</span>resources: true</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>theme: <span class="st">"Lumen"</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="op">---</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="bce81e5d" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> make_column_selector, ColumnTransformer</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler, OneHotEncoder, PolynomialFeatures</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression, Ridge, Lasso, ElasticNet </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split, cross_val_score</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> r2_score</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="9490025a" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ames <span class="op">=</span> pd.read_csv(<span class="st">"AmesHousing.csv"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Get rid of columns with mostly NaN values</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>good_cols <span class="op">=</span> ames.isna().<span class="bu">sum</span>() <span class="op">&lt;</span> <span class="dv">100</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>ames <span class="op">=</span> ames.loc[:,good_cols]</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop other NAs</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>ames <span class="op">=</span> ames.dropna()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="2637f3ef" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ames</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Order</th>
+<th data-quarto-table-cell-role="th">PID</th>
+<th data-quarto-table-cell-role="th">MS SubClass</th>
+<th data-quarto-table-cell-role="th">MS Zoning</th>
+<th data-quarto-table-cell-role="th">Lot Area</th>
+<th data-quarto-table-cell-role="th">Street</th>
+<th data-quarto-table-cell-role="th">Lot Shape</th>
+<th data-quarto-table-cell-role="th">Land Contour</th>
+<th data-quarto-table-cell-role="th">Utilities</th>
+<th data-quarto-table-cell-role="th">Lot Config</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">Enclosed Porch</th>
+<th data-quarto-table-cell-role="th">3Ssn Porch</th>
+<th data-quarto-table-cell-role="th">Screen Porch</th>
+<th data-quarto-table-cell-role="th">Pool Area</th>
+<th data-quarto-table-cell-role="th">Misc Val</th>
+<th data-quarto-table-cell-role="th">Mo Sold</th>
+<th data-quarto-table-cell-role="th">Yr Sold</th>
+<th data-quarto-table-cell-role="th">Sale Type</th>
+<th data-quarto-table-cell-role="th">Sale Condition</th>
+<th data-quarto-table-cell-role="th">SalePrice</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
+<td>526301100</td>
+<td>20</td>
+<td>RL</td>
+<td>31770</td>
+<td>Pave</td>
+<td>IR1</td>
+<td>Lvl</td>
+<td>AllPub</td>
+<td>Corner</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>5</td>
+<td>2010</td>
+<td>WD</td>
+<td>Normal</td>
+<td>215000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2</td>
+<td>526350040</td>
+<td>20</td>
+<td>RH</td>
+<td>11622</td>
+<td>Pave</td>
+<td>Reg</td>
+<td>Lvl</td>
+<td>AllPub</td>
+<td>Inside</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>120</td>
+<td>0</td>
+<td>0</td>
+<td>6</td>
+<td>2010</td>
+<td>WD</td>
+<td>Normal</td>
+<td>105000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3</td>
+<td>526351010</td>
+<td>20</td>
+<td>RL</td>
+<td>14267</td>
+<td>Pave</td>
+<td>IR1</td>
+<td>Lvl</td>
+<td>AllPub</td>
+<td>Corner</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>12500</td>
+<td>6</td>
+<td>2010</td>
+<td>WD</td>
+<td>Normal</td>
+<td>172000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>4</td>
+<td>526353030</td>
+<td>20</td>
+<td>RL</td>
+<td>11160</td>
+<td>Pave</td>
+<td>Reg</td>
+<td>Lvl</td>
+<td>AllPub</td>
+<td>Corner</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>4</td>
+<td>2010</td>
+<td>WD</td>
+<td>Normal</td>
+<td>244000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>5</td>
+<td>527105010</td>
+<td>60</td>
+<td>RL</td>
+<td>13830</td>
+<td>Pave</td>
+<td>IR1</td>
+<td>Lvl</td>
+<td>AllPub</td>
+<td>Inside</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>2010</td>
+<td>WD</td>
+<td>Normal</td>
+<td>189900</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2925</td>
+<td>2926</td>
+<td>923275080</td>
+<td>80</td>
+<td>RL</td>
+<td>7937</td>
+<td>Pave</td>
+<td>IR1</td>
+<td>Lvl</td>
+<td>AllPub</td>
+<td>CulDSac</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>2006</td>
+<td>WD</td>
+<td>Normal</td>
+<td>142500</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2926</td>
+<td>2927</td>
+<td>923276100</td>
+<td>20</td>
+<td>RL</td>
+<td>8885</td>
+<td>Pave</td>
+<td>IR1</td>
+<td>Low</td>
+<td>AllPub</td>
+<td>Inside</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>6</td>
+<td>2006</td>
+<td>WD</td>
+<td>Normal</td>
+<td>131000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2927</td>
+<td>2928</td>
+<td>923400125</td>
+<td>85</td>
+<td>RL</td>
+<td>10441</td>
+<td>Pave</td>
+<td>Reg</td>
+<td>Lvl</td>
+<td>AllPub</td>
+<td>Inside</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>700</td>
+<td>7</td>
+<td>2006</td>
+<td>WD</td>
+<td>Normal</td>
+<td>132000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2928</td>
+<td>2929</td>
+<td>924100070</td>
+<td>20</td>
+<td>RL</td>
+<td>10010</td>
+<td>Pave</td>
+<td>Reg</td>
+<td>Lvl</td>
+<td>AllPub</td>
+<td>Inside</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>4</td>
+<td>2006</td>
+<td>WD</td>
+<td>Normal</td>
+<td>170000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2929</td>
+<td>2930</td>
+<td>924151050</td>
+<td>60</td>
+<td>RL</td>
+<td>9627</td>
+<td>Pave</td>
+<td>Reg</td>
+<td>Lvl</td>
+<td>AllPub</td>
+<td>Inside</td>
+<td>...</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>11</td>
+<td>2006</td>
+<td>WD</td>
+<td>Normal</td>
+<td>188000</td>
+</tr>
+</tbody>
+</table>
+
+<p>2821 rows × 70 columns</p>
+</div>
+</div>
+</div>
+<div id="5e37ca73" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> ames.drop([<span class="st">"SalePrice"</span>, <span class="st">"Order"</span>, <span class="st">"PID"</span>], axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> ames[<span class="st">"SalePrice"</span>]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>ct <span class="op">=</span> ColumnTransformer(</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  [</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"dummify"</span>, </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    OneHotEncoder(sparse_output <span class="op">=</span> <span class="va">False</span>, handle_unknown<span class="op">=</span><span class="st">'ignore'</span>),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    make_column_selector(dtype_include<span class="op">=</span><span class="bu">object</span>)),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"standardize"</span>, </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    StandardScaler(), </span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    make_column_selector(dtype_include<span class="op">=</span>np.number))</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  ],</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  remainder <span class="op">=</span> <span class="st">"passthrough"</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>lr_pipeline_1 <span class="op">=</span> Pipeline(</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  [(<span class="st">"preprocessing"</span>, ct),</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  (<span class="st">"linear_regression"</span>, LinearRegression())]</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The handle_unknown=‘ignore’ argument in the OneHotEncoder within the ColumnTransformer ensures that when the model encounters categories during prediction that were not present during training, it will not throw an error. Instead, it will ignore those unseen categories and encode them as all-zero vectors.</p>
+<section id="notice-in-the-onehotencoder-we-used-make_column_selectordtype_includeobject-instead-of-supplying-column-names.-what-did-this-accomplish" class="level3">
+<h3 class="anchored" data-anchor-id="notice-in-the-onehotencoder-we-used-make_column_selectordtype_includeobject-instead-of-supplying-column-names.-what-did-this-accomplish">1.2 Notice in the OneHotEncoder, we used make_column_selector(dtype_include=object) instead of supplying column names. What did this accomplish?</h3>
+<p>Automatically selects all categorical columns (object dtype) without specifying column names, making the code more flexible and adaptable.</p>
+</section>
+<section id="why-did-we-drop-the-order-and-pid-columns" class="level3">
+<h3 class="anchored" data-anchor-id="why-did-we-drop-the-order-and-pid-columns">1.3 Why did we drop the Order and PID columns?</h3>
+<p>Order and PID have unique values which is not useful in predicting the ‘SalePrice’.</p>
+<div id="ae86be44" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cross_val_score(lr_pipeline_1, X, y, cv <span class="op">=</span> <span class="dv">5</span>, scoring <span class="op">=</span> <span class="st">'r2'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>array([-1.08138223e+20, -1.43333757e+20, -1.73249837e+22, -4.41795802e+19,
+       -2.03737393e+19])</code></pre>
+</div>
+</div>
+<div id="4d9a77ce" class="cell" data-execution_count="100">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>scores <span class="op">=</span> cross_val_score(lr_pipeline_1, X, y, cv<span class="op">=</span><span class="dv">5</span>, scoring<span class="op">=</span><span class="st">'r2'</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>scores</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="100">
+<pre><code>array([-1.08138223e+20, -1.43333757e+20, -1.73249837e+22, -4.41795802e+19,
+       -2.03737393e+19])</code></pre>
+</div>
+</div>
+<div id="ff6a69d6" class="cell" data-execution_count="105">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lr_pipeline_1_fit <span class="op">=</span> lr_pipeline_1.fit(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="64a9e5fb" class="cell" data-execution_count="106">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>linear_coef<span class="op">=</span>lr_pipeline_1_fit.named_steps[<span class="st">'linear_regression'</span>].coef_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="make-a-pipeline-that-uses-all-the-variables-in-the-ames-dataset-and-then-fits-ridge-regression-with" class="level3">
+<h3 class="anchored" data-anchor-id="make-a-pipeline-that-uses-all-the-variables-in-the-ames-dataset-and-then-fits-ridge-regression-with">1.4 Make a pipeline that uses all the variables in the Ames dataset, and then fits Ridge Regression with</h3>
+<p>.</p>
+<p>Cross-validate this pipeline and compare the results to the ordinary linear regression.</p>
+<p>Then fit the model on the whole dataset and get the coefficients. Make a plot of these coefficients compared to the ones from ordinary linear regression.</p>
+<div id="6ee23f0a" class="cell" data-execution_count="108">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ct <span class="op">=</span> ColumnTransformer(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    [</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        (<span class="st">"dummify"</span>, </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>         OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>, handle_unknown<span class="op">=</span><span class="st">'ignore'</span>), </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>         make_column_selector(dtype_include<span class="op">=</span><span class="bu">object</span>)),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        (<span class="st">"standardize"</span>, </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>         StandardScaler(), </span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>         make_column_selector(dtype_include<span class="op">=</span>np.number))</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    remainder<span class="op">=</span><span class="st">"passthrough"</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>ridge_pipeline <span class="op">=</span> Pipeline([</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"preprocessing"</span>, ct),</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"ridge_regression"</span>, Ridge(alpha<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>ridge_cv_scores <span class="op">=</span> cross_val_score(ridge_pipeline, X, y, cv<span class="op">=</span><span class="dv">5</span>, scoring<span class="op">=</span><span class="st">'r2'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="0dde5c28" class="cell" data-execution_count="110">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>scores_rid <span class="op">=</span> cross_val_score(ridge_pipeline, X, y, cv <span class="op">=</span> <span class="dv">5</span>, scoring <span class="op">=</span> <span class="st">'r2'</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>scores_rid</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="110">
+<pre><code>array([0.89815807, 0.91744024, 0.79493606, 0.78522563, 0.91389818])</code></pre>
+</div>
+</div>
+<div id="35297002" class="cell" data-execution_count="111">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>ridge_pipeline.fit(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="111">
+<style>#sk-container-id-7 {
+  /* Definition of color scheme common for light and dark mode */
+  --sklearn-color-text: black;
+  --sklearn-color-line: gray;
+  /* Definition of color scheme for unfitted estimators */
+  --sklearn-color-unfitted-level-0: #fff5e6;
+  --sklearn-color-unfitted-level-1: #f6e4d2;
+  --sklearn-color-unfitted-level-2: #ffe0b3;
+  --sklearn-color-unfitted-level-3: chocolate;
+  /* Definition of color scheme for fitted estimators */
+  --sklearn-color-fitted-level-0: #f0f8ff;
+  --sklearn-color-fitted-level-1: #d4ebff;
+  --sklearn-color-fitted-level-2: #b3dbfd;
+  --sklearn-color-fitted-level-3: cornflowerblue;
+
+  /* Specific color for light theme */
+  --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
+  --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, white)));
+  --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
+  --sklearn-color-icon: #696969;
+
+  @media (prefers-color-scheme: dark) {
+    /* Redefinition of color scheme for dark theme */
+    --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
+    --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, #111)));
+    --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
+    --sklearn-color-icon: #878787;
+  }
+}
+
+#sk-container-id-7 {
+  color: var(--sklearn-color-text);
+}
+
+#sk-container-id-7 pre {
+  padding: 0;
+}
+
+#sk-container-id-7 input.sk-hidden--visually {
+  border: 0;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+#sk-container-id-7 div.sk-dashed-wrapped {
+  border: 1px dashed var(--sklearn-color-line);
+  margin: 0 0.4em 0.5em 0.4em;
+  box-sizing: border-box;
+  padding-bottom: 0.4em;
+  background-color: var(--sklearn-color-background);
+}
+
+#sk-container-id-7 div.sk-container {
+  /* jupyter's `normalize.less` sets `[hidden] { display: none; }`
+     but bootstrap.min.css set `[hidden] { display: none !important; }`
+     so we also need the `!important` here to be able to override the
+     default hidden behavior on the sphinx rendered scikit-learn.org.
+     See: https://github.com/scikit-learn/scikit-learn/issues/21755 */
+  display: inline-block !important;
+  position: relative;
+}
+
+#sk-container-id-7 div.sk-text-repr-fallback {
+  display: none;
+}
+
+div.sk-parallel-item,
+div.sk-serial,
+div.sk-item {
+  /* draw centered vertical line to link estimators */
+  background-image: linear-gradient(var(--sklearn-color-text-on-default-background), var(--sklearn-color-text-on-default-background));
+  background-size: 2px 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+/* Parallel-specific style estimator block */
+
+#sk-container-id-7 div.sk-parallel-item::after {
+  content: "";
+  width: 100%;
+  border-bottom: 2px solid var(--sklearn-color-text-on-default-background);
+  flex-grow: 1;
+}
+
+#sk-container-id-7 div.sk-parallel {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  background-color: var(--sklearn-color-background);
+  position: relative;
+}
+
+#sk-container-id-7 div.sk-parallel-item {
+  display: flex;
+  flex-direction: column;
+}
+
+#sk-container-id-7 div.sk-parallel-item:first-child::after {
+  align-self: flex-end;
+  width: 50%;
+}
+
+#sk-container-id-7 div.sk-parallel-item:last-child::after {
+  align-self: flex-start;
+  width: 50%;
+}
+
+#sk-container-id-7 div.sk-parallel-item:only-child::after {
+  width: 0;
+}
+
+/* Serial-specific style estimator block */
+
+#sk-container-id-7 div.sk-serial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--sklearn-color-background);
+  padding-right: 1em;
+  padding-left: 1em;
+}
+
+
+/* Toggleable style: style used for estimator/Pipeline/ColumnTransformer box that is
+clickable and can be expanded/collapsed.
+- Pipeline and ColumnTransformer use this feature and define the default style
+- Estimators will overwrite some part of the style using the `sk-estimator` class
+*/
+
+/* Pipeline and ColumnTransformer style (default) */
+
+#sk-container-id-7 div.sk-toggleable {
+  /* Default theme specific background. It is overwritten whether we have a
+  specific estimator or a Pipeline/ColumnTransformer */
+  background-color: var(--sklearn-color-background);
+}
+
+/* Toggleable label */
+#sk-container-id-7 label.sk-toggleable__label {
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  margin-bottom: 0;
+  padding: 0.5em;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+#sk-container-id-7 label.sk-toggleable__label-arrow:before {
+  /* Arrow on the left of the label */
+  content: "▸";
+  float: left;
+  margin-right: 0.25em;
+  color: var(--sklearn-color-icon);
+}
+
+#sk-container-id-7 label.sk-toggleable__label-arrow:hover:before {
+  color: var(--sklearn-color-text);
+}
+
+/* Toggleable content - dropdown */
+
+#sk-container-id-7 div.sk-toggleable__content {
+  max-height: 0;
+  max-width: 0;
+  overflow: hidden;
+  text-align: left;
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-7 div.sk-toggleable__content.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-7 div.sk-toggleable__content pre {
+  margin: 0.2em;
+  border-radius: 0.25em;
+  color: var(--sklearn-color-text);
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-7 div.sk-toggleable__content.fitted pre {
+  /* unfitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-7 input.sk-toggleable__control:checked~div.sk-toggleable__content {
+  /* Expand drop-down */
+  max-height: 200px;
+  max-width: 100%;
+  overflow: auto;
+}
+
+#sk-container-id-7 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {
+  content: "▾";
+}
+
+/* Pipeline/ColumnTransformer-specific style */
+
+#sk-container-id-7 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-7 div.sk-label.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Estimator-specific style */
+
+/* Colorize estimator box */
+#sk-container-id-7 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-7 div.sk-estimator.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+#sk-container-id-7 div.sk-label label.sk-toggleable__label,
+#sk-container-id-7 div.sk-label label {
+  /* The background is the default theme color */
+  color: var(--sklearn-color-text-on-default-background);
+}
+
+/* On hover, darken the color of the background */
+#sk-container-id-7 div.sk-label:hover label.sk-toggleable__label {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+/* Label box, darken color on hover, fitted */
+#sk-container-id-7 div.sk-label.fitted:hover label.sk-toggleable__label.fitted {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Estimator label */
+
+#sk-container-id-7 div.sk-label label {
+  font-family: monospace;
+  font-weight: bold;
+  display: inline-block;
+  line-height: 1.2em;
+}
+
+#sk-container-id-7 div.sk-label-container {
+  text-align: center;
+}
+
+/* Estimator-specific */
+#sk-container-id-7 div.sk-estimator {
+  font-family: monospace;
+  border: 1px dotted var(--sklearn-color-border-box);
+  border-radius: 0.25em;
+  box-sizing: border-box;
+  margin-bottom: 0.5em;
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-7 div.sk-estimator.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+/* on hover */
+#sk-container-id-7 div.sk-estimator:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-7 div.sk-estimator.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Specification for estimator info (e.g. "i" and "?") */
+
+/* Common style for "i" and "?" */
+
+.sk-estimator-doc-link,
+a:link.sk-estimator-doc-link,
+a:visited.sk-estimator-doc-link {
+  float: right;
+  font-size: smaller;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-background);
+  border-radius: 1em;
+  height: 1em;
+  width: 1em;
+  text-decoration: none !important;
+  margin-left: 1ex;
+  /* unfitted */
+  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+  color: var(--sklearn-color-unfitted-level-1);
+}
+
+.sk-estimator-doc-link.fitted,
+a:link.sk-estimator-doc-link.fitted,
+a:visited.sk-estimator-doc-link.fitted {
+  /* fitted */
+  border: var(--sklearn-color-fitted-level-1) 1pt solid;
+  color: var(--sklearn-color-fitted-level-1);
+}
+
+/* On hover */
+div.sk-estimator:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover,
+div.sk-label-container:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+div.sk-estimator.fitted:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover,
+div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+/* Span, style for the box shown on hovering the info icon */
+.sk-estimator-doc-link span {
+  display: none;
+  z-index: 9999;
+  position: relative;
+  font-weight: normal;
+  right: .2ex;
+  padding: .5ex;
+  margin: .5ex;
+  width: min-content;
+  min-width: 20ex;
+  max-width: 50ex;
+  color: var(--sklearn-color-text);
+  box-shadow: 2pt 2pt 4pt #999;
+  /* unfitted */
+  background: var(--sklearn-color-unfitted-level-0);
+  border: .5pt solid var(--sklearn-color-unfitted-level-3);
+}
+
+.sk-estimator-doc-link.fitted span {
+  /* fitted */
+  background: var(--sklearn-color-fitted-level-0);
+  border: var(--sklearn-color-fitted-level-3);
+}
+
+.sk-estimator-doc-link:hover span {
+  display: block;
+}
+
+/* "?"-specific style due to the `<a>` HTML tag */
+
+#sk-container-id-7 a.estimator_doc_link {
+  float: right;
+  font-size: 1rem;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-background);
+  border-radius: 1rem;
+  height: 1rem;
+  width: 1rem;
+  text-decoration: none;
+  /* unfitted */
+  color: var(--sklearn-color-unfitted-level-1);
+  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+}
+
+#sk-container-id-7 a.estimator_doc_link.fitted {
+  /* fitted */
+  border: var(--sklearn-color-fitted-level-1) 1pt solid;
+  color: var(--sklearn-color-fitted-level-1);
+}
+
+/* On hover */
+#sk-container-id-7 a.estimator_doc_link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+#sk-container-id-7 a.estimator_doc_link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+}
+</style><div id="sk-container-id-7" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>Pipeline(steps=[('preprocessing',
+                 ColumnTransformer(remainder='passthrough',
+                                   transformers=[('dummify',
+                                                  OneHotEncoder(handle_unknown='ignore',
+                                                                sparse_output=False),
+                                                  &lt;sklearn.compose._column_transformer.make_column_selector object at 0x1761e7910&gt;),
+                                                 ('standardize',
+                                                  StandardScaler(),
+                                                  &lt;sklearn.compose._column_transformer.make_column_selector object at 0x172e5e7d0&gt;)])),
+                ('ridge_regression', Ridge(alpha=1))])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-56" type="checkbox"><label for="sk-estimator-id-56" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;&nbsp;Pipeline<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.5/modules/generated/sklearn.pipeline.Pipeline.html">?<span>Documentation for Pipeline</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></label><div class="sk-toggleable__content fitted"><pre>Pipeline(steps=[('preprocessing',
+                 ColumnTransformer(remainder='passthrough',
+                                   transformers=[('dummify',
+                                                  OneHotEncoder(handle_unknown='ignore',
+                                                                sparse_output=False),
+                                                  &lt;sklearn.compose._column_transformer.make_column_selector object at 0x1761e7910&gt;),
+                                                 ('standardize',
+                                                  StandardScaler(),
+                                                  &lt;sklearn.compose._column_transformer.make_column_selector object at 0x172e5e7d0&gt;)])),
+                ('ridge_regression', Ridge(alpha=1))])</pre></div> </div></div><div class="sk-serial"><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-57" type="checkbox"><label for="sk-estimator-id-57" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;preprocessing: ColumnTransformer<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.5/modules/generated/sklearn.compose.ColumnTransformer.html">?<span>Documentation for preprocessing: ColumnTransformer</span></a></label><div class="sk-toggleable__content fitted"><pre>ColumnTransformer(remainder='passthrough',
+                  transformers=[('dummify',
+                                 OneHotEncoder(handle_unknown='ignore',
+                                               sparse_output=False),
+                                 &lt;sklearn.compose._column_transformer.make_column_selector object at 0x1761e7910&gt;),
+                                ('standardize', StandardScaler(),
+                                 &lt;sklearn.compose._column_transformer.make_column_selector object at 0x172e5e7d0&gt;)])</pre></div> </div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-58" type="checkbox"><label for="sk-estimator-id-58" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">dummify</label><div class="sk-toggleable__content fitted"><pre>&lt;sklearn.compose._column_transformer.make_column_selector object at 0x1761e7910&gt;</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-59" type="checkbox"><label for="sk-estimator-id-59" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;OneHotEncoder<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.5/modules/generated/sklearn.preprocessing.OneHotEncoder.html">?<span>Documentation for OneHotEncoder</span></a></label><div class="sk-toggleable__content fitted"><pre>OneHotEncoder(handle_unknown='ignore', sparse_output=False)</pre></div> </div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-60" type="checkbox"><label for="sk-estimator-id-60" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">standardize</label><div class="sk-toggleable__content fitted"><pre>&lt;sklearn.compose._column_transformer.make_column_selector object at 0x172e5e7d0&gt;</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-61" type="checkbox"><label for="sk-estimator-id-61" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;StandardScaler<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.5/modules/generated/sklearn.preprocessing.StandardScaler.html">?<span>Documentation for StandardScaler</span></a></label><div class="sk-toggleable__content fitted"><pre>StandardScaler()</pre></div> </div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-62" type="checkbox"><label for="sk-estimator-id-62" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">remainder</label><div class="sk-toggleable__content fitted"><pre>[]</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-63" type="checkbox"><label for="sk-estimator-id-63" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">passthrough</label><div class="sk-toggleable__content fitted"><pre>passthrough</pre></div> </div></div></div></div></div></div></div><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-64" type="checkbox"><label for="sk-estimator-id-64" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;Ridge<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.5/modules/generated/sklearn.linear_model.Ridge.html">?<span>Documentation for Ridge</span></a></label><div class="sk-toggleable__content fitted"><pre>Ridge(alpha=1)</pre></div> </div></div></div></div></div></div>
+</div>
+</div>
+<div id="934e629e" class="cell" data-execution_count="112">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>ridge_coefficients <span class="op">=</span> ridge_pipeline.named_steps[<span class="st">'ridge_regression'</span>].coef_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="2b74c587" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>coeff_df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Feature"</span>: X.columns.tolist() <span class="op">+</span> [<span class="ss">f"Dummy_</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ridge_coefficients) <span class="op">-</span> <span class="bu">len</span>(X.columns))],</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Ridge Coefficients"</span>: ridge_coefficients,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Linear Regression Coefficients"</span>: lr_coefficients</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>coeff_df_melted <span class="op">=</span> coeff_df.melt(id_vars<span class="op">=</span>[<span class="st">"Feature"</span>], </span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>                                 value_vars<span class="op">=</span>[<span class="st">"Ridge Coefficients"</span>, <span class="st">"Linear Regression Coefficients"</span>],</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>                                 var_name<span class="op">=</span><span class="st">"Model"</span>, value_name<span class="op">=</span><span class="st">"Coefficient Value"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="e1c988a1" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>df_coeff <span class="op">=</span> pd.DataFrame({<span class="st">"linear"</span>: lr_coefficients,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"ridge"</span>: ridge_coefficients})</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>df_coeff[<span class="st">'y_axis'</span>] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>df_coeff</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>(ggplot(df_coeff, aes(x <span class="op">=</span> <span class="st">"linear"</span>, y <span class="op">=</span> <span class="st">"ridge"</span>))</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_point())</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>(ggplot(df_coeff, aes(x <span class="op">=</span> <span class="st">"linear"</span>, y <span class="op">=</span> <span class="st">"ridge"</span>))</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> geom_point())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="PracticeAct7.2_files/figure-html/cell-16-output-1.png" width="640" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="a6941dda" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df_coeff <span class="op">=</span> pd.DataFrame({<span class="st">"linear"</span>: lr_coefficients,</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"ridge"</span>: ridge_coefficients})</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>df_long <span class="op">=</span> pd.melt(df_coeff, var_name<span class="op">=</span><span class="st">'model'</span>, value_name<span class="op">=</span><span class="st">'coefficient'</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>(ggplot(df_long, aes(x<span class="op">=</span><span class="st">'coefficient'</span>, fill<span class="op">=</span><span class="st">'model'</span>))</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_histogram(bins<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, position<span class="op">=</span><span class="st">'identity'</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> labs(title<span class="op">=</span><span class="st">'Comparison of Linear and Ridge Regression Coefficients'</span>,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>        x<span class="op">=</span><span class="st">'Coefficient Value'</span>, y<span class="op">=</span><span class="st">'Frequency'</span>)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="PracticeAct7.2_files/figure-html/cell-17-output-1.png" width="640" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="08c021af" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> GridSearchCV, train_test_split</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>param_grid <span class="op">=</span> {</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ridge_regression__alpha"</span>: [<span class="fl">0.001</span>, <span class="fl">0.01</span>, <span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">10</span>]</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>grid_search <span class="op">=</span> GridSearchCV(ridge_pipeline, param_grid, cv<span class="op">=</span><span class="dv">5</span>, scoring<span class="op">=</span><span class="st">"r2"</span>, verbose<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>gscv_fit<span class="op">=</span> grid_search.fit(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Fitting 5 folds for each of 5 candidates, totalling 25 fits</code></pre>
+</div>
+</div>
+<div id="461a7769" class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(gscv_fit.cv_results_)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="35">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">mean_fit_time</th>
+<th data-quarto-table-cell-role="th">std_fit_time</th>
+<th data-quarto-table-cell-role="th">mean_score_time</th>
+<th data-quarto-table-cell-role="th">std_score_time</th>
+<th data-quarto-table-cell-role="th">param_ridge_regression__alpha</th>
+<th data-quarto-table-cell-role="th">params</th>
+<th data-quarto-table-cell-role="th">split0_test_score</th>
+<th data-quarto-table-cell-role="th">split1_test_score</th>
+<th data-quarto-table-cell-role="th">split2_test_score</th>
+<th data-quarto-table-cell-role="th">split3_test_score</th>
+<th data-quarto-table-cell-role="th">split4_test_score</th>
+<th data-quarto-table-cell-role="th">mean_test_score</th>
+<th data-quarto-table-cell-role="th">std_test_score</th>
+<th data-quarto-table-cell-role="th">rank_test_score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.035464</td>
+<td>0.010866</td>
+<td>0.009135</td>
+<td>0.000977</td>
+<td>0.001</td>
+<td>{'ridge_regression__alpha': 0.001}</td>
+<td>0.897285</td>
+<td>0.910406</td>
+<td>0.789016</td>
+<td>0.772132</td>
+<td>0.900762</td>
+<td>0.853920</td>
+<td>0.060278</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0.026464</td>
+<td>0.000779</td>
+<td>0.007895</td>
+<td>0.000179</td>
+<td>0.010</td>
+<td>{'ridge_regression__alpha': 0.01}</td>
+<td>0.897343</td>
+<td>0.910614</td>
+<td>0.789126</td>
+<td>0.772532</td>
+<td>0.901317</td>
+<td>0.854186</td>
+<td>0.060280</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0.026584</td>
+<td>0.001879</td>
+<td>0.007755</td>
+<td>0.000158</td>
+<td>0.100</td>
+<td>{'ridge_regression__alpha': 0.1}</td>
+<td>0.897744</td>
+<td>0.912306</td>
+<td>0.790110</td>
+<td>0.775764</td>
+<td>0.905587</td>
+<td>0.856302</td>
+<td>0.060250</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>0.026350</td>
+<td>0.000708</td>
+<td>0.007997</td>
+<td>0.000393</td>
+<td>1.000</td>
+<td>{'ridge_regression__alpha': 1}</td>
+<td>0.898158</td>
+<td>0.917440</td>
+<td>0.794936</td>
+<td>0.785226</td>
+<td>0.913898</td>
+<td>0.861932</td>
+<td>0.059104</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0.026650</td>
+<td>0.001823</td>
+<td>0.007955</td>
+<td>0.000292</td>
+<td>10.000</td>
+<td>{'ridge_regression__alpha': 10}</td>
+<td>0.897762</td>
+<td>0.920812</td>
+<td>0.800572</td>
+<td>0.787120</td>
+<td>0.915095</td>
+<td>0.864272</td>
+<td>0.058157</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="53dfa12a" class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>scores <span class="op">=</span> gscv_fit.cv_results_[<span class="st">'mean_test_score'</span>]</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>scores</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="36">
+<pre><code>array([0.85392021, 0.85418638, 0.85630206, 0.86193163, 0.86427221])</code></pre>
+</div>
+</div>
+<div id="382ea179" class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(data <span class="op">=</span> {<span class="st">"alpha"</span>: gscv_fit.cv_results_[<span class="st">'param_ridge_regression__alpha'</span>], <span class="st">"scores"</span>: gscv_fit.cv_results_[<span class="st">'mean_test_score'</span>]}).sort_values(by <span class="op">=</span> <span class="st">"scores"</span>, ascending <span class="op">=</span> <span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="37">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">alpha</th>
+<th data-quarto-table-cell-role="th">scores</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>10.000</td>
+<td>0.864272</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1.000</td>
+<td>0.861932</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0.100</td>
+<td>0.856302</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0.010</td>
+<td>0.854186</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.001</td>
+<td>0.853920</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="create-a-lasso-pipeline-and-tune-lambda." class="level2">
+<h2 class="anchored" data-anchor-id="create-a-lasso-pipeline-and-tune-lambda.">Create a LASSO pipeline, and tune lambda.</h2>
+<p>Fit your best model on the full Ames data, and compare the coefficients to Ridge and OLS</p>
+<div id="2835416a" class="cell" data-execution_count="113">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>lasso_pipeline <span class="op">=</span> Pipeline([</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"preprocessor"</span>, ct),</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"lasso"</span>, Lasso())</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cc742963" class="cell" data-execution_count="114">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>cv_scores <span class="op">=</span> cross_val_score(lasso_pipeline, X, y, cv<span class="op">=</span><span class="dv">5</span>, scoring<span class="op">=</span><span class="st">"r2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.323e+10, tolerance: 1.477e+09</code></pre>
+</div>
+</div>
+<div id="722ecf11" class="cell" data-execution_count="115">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>lasso_pipeline.fit(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="115">
+<style>#sk-container-id-8 {
+  /* Definition of color scheme common for light and dark mode */
+  --sklearn-color-text: black;
+  --sklearn-color-line: gray;
+  /* Definition of color scheme for unfitted estimators */
+  --sklearn-color-unfitted-level-0: #fff5e6;
+  --sklearn-color-unfitted-level-1: #f6e4d2;
+  --sklearn-color-unfitted-level-2: #ffe0b3;
+  --sklearn-color-unfitted-level-3: chocolate;
+  /* Definition of color scheme for fitted estimators */
+  --sklearn-color-fitted-level-0: #f0f8ff;
+  --sklearn-color-fitted-level-1: #d4ebff;
+  --sklearn-color-fitted-level-2: #b3dbfd;
+  --sklearn-color-fitted-level-3: cornflowerblue;
+
+  /* Specific color for light theme */
+  --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
+  --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, white)));
+  --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
+  --sklearn-color-icon: #696969;
+
+  @media (prefers-color-scheme: dark) {
+    /* Redefinition of color scheme for dark theme */
+    --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
+    --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, #111)));
+    --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
+    --sklearn-color-icon: #878787;
+  }
+}
+
+#sk-container-id-8 {
+  color: var(--sklearn-color-text);
+}
+
+#sk-container-id-8 pre {
+  padding: 0;
+}
+
+#sk-container-id-8 input.sk-hidden--visually {
+  border: 0;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+#sk-container-id-8 div.sk-dashed-wrapped {
+  border: 1px dashed var(--sklearn-color-line);
+  margin: 0 0.4em 0.5em 0.4em;
+  box-sizing: border-box;
+  padding-bottom: 0.4em;
+  background-color: var(--sklearn-color-background);
+}
+
+#sk-container-id-8 div.sk-container {
+  /* jupyter's `normalize.less` sets `[hidden] { display: none; }`
+     but bootstrap.min.css set `[hidden] { display: none !important; }`
+     so we also need the `!important` here to be able to override the
+     default hidden behavior on the sphinx rendered scikit-learn.org.
+     See: https://github.com/scikit-learn/scikit-learn/issues/21755 */
+  display: inline-block !important;
+  position: relative;
+}
+
+#sk-container-id-8 div.sk-text-repr-fallback {
+  display: none;
+}
+
+div.sk-parallel-item,
+div.sk-serial,
+div.sk-item {
+  /* draw centered vertical line to link estimators */
+  background-image: linear-gradient(var(--sklearn-color-text-on-default-background), var(--sklearn-color-text-on-default-background));
+  background-size: 2px 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+/* Parallel-specific style estimator block */
+
+#sk-container-id-8 div.sk-parallel-item::after {
+  content: "";
+  width: 100%;
+  border-bottom: 2px solid var(--sklearn-color-text-on-default-background);
+  flex-grow: 1;
+}
+
+#sk-container-id-8 div.sk-parallel {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  background-color: var(--sklearn-color-background);
+  position: relative;
+}
+
+#sk-container-id-8 div.sk-parallel-item {
+  display: flex;
+  flex-direction: column;
+}
+
+#sk-container-id-8 div.sk-parallel-item:first-child::after {
+  align-self: flex-end;
+  width: 50%;
+}
+
+#sk-container-id-8 div.sk-parallel-item:last-child::after {
+  align-self: flex-start;
+  width: 50%;
+}
+
+#sk-container-id-8 div.sk-parallel-item:only-child::after {
+  width: 0;
+}
+
+/* Serial-specific style estimator block */
+
+#sk-container-id-8 div.sk-serial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--sklearn-color-background);
+  padding-right: 1em;
+  padding-left: 1em;
+}
+
+
+/* Toggleable style: style used for estimator/Pipeline/ColumnTransformer box that is
+clickable and can be expanded/collapsed.
+- Pipeline and ColumnTransformer use this feature and define the default style
+- Estimators will overwrite some part of the style using the `sk-estimator` class
+*/
+
+/* Pipeline and ColumnTransformer style (default) */
+
+#sk-container-id-8 div.sk-toggleable {
+  /* Default theme specific background. It is overwritten whether we have a
+  specific estimator or a Pipeline/ColumnTransformer */
+  background-color: var(--sklearn-color-background);
+}
+
+/* Toggleable label */
+#sk-container-id-8 label.sk-toggleable__label {
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  margin-bottom: 0;
+  padding: 0.5em;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+#sk-container-id-8 label.sk-toggleable__label-arrow:before {
+  /* Arrow on the left of the label */
+  content: "▸";
+  float: left;
+  margin-right: 0.25em;
+  color: var(--sklearn-color-icon);
+}
+
+#sk-container-id-8 label.sk-toggleable__label-arrow:hover:before {
+  color: var(--sklearn-color-text);
+}
+
+/* Toggleable content - dropdown */
+
+#sk-container-id-8 div.sk-toggleable__content {
+  max-height: 0;
+  max-width: 0;
+  overflow: hidden;
+  text-align: left;
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-8 div.sk-toggleable__content.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-8 div.sk-toggleable__content pre {
+  margin: 0.2em;
+  border-radius: 0.25em;
+  color: var(--sklearn-color-text);
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-8 div.sk-toggleable__content.fitted pre {
+  /* unfitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-8 input.sk-toggleable__control:checked~div.sk-toggleable__content {
+  /* Expand drop-down */
+  max-height: 200px;
+  max-width: 100%;
+  overflow: auto;
+}
+
+#sk-container-id-8 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {
+  content: "▾";
+}
+
+/* Pipeline/ColumnTransformer-specific style */
+
+#sk-container-id-8 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-8 div.sk-label.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Estimator-specific style */
+
+/* Colorize estimator box */
+#sk-container-id-8 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-8 div.sk-estimator.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+#sk-container-id-8 div.sk-label label.sk-toggleable__label,
+#sk-container-id-8 div.sk-label label {
+  /* The background is the default theme color */
+  color: var(--sklearn-color-text-on-default-background);
+}
+
+/* On hover, darken the color of the background */
+#sk-container-id-8 div.sk-label:hover label.sk-toggleable__label {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+/* Label box, darken color on hover, fitted */
+#sk-container-id-8 div.sk-label.fitted:hover label.sk-toggleable__label.fitted {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Estimator label */
+
+#sk-container-id-8 div.sk-label label {
+  font-family: monospace;
+  font-weight: bold;
+  display: inline-block;
+  line-height: 1.2em;
+}
+
+#sk-container-id-8 div.sk-label-container {
+  text-align: center;
+}
+
+/* Estimator-specific */
+#sk-container-id-8 div.sk-estimator {
+  font-family: monospace;
+  border: 1px dotted var(--sklearn-color-border-box);
+  border-radius: 0.25em;
+  box-sizing: border-box;
+  margin-bottom: 0.5em;
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-8 div.sk-estimator.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+/* on hover */
+#sk-container-id-8 div.sk-estimator:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-8 div.sk-estimator.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Specification for estimator info (e.g. "i" and "?") */
+
+/* Common style for "i" and "?" */
+
+.sk-estimator-doc-link,
+a:link.sk-estimator-doc-link,
+a:visited.sk-estimator-doc-link {
+  float: right;
+  font-size: smaller;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-background);
+  border-radius: 1em;
+  height: 1em;
+  width: 1em;
+  text-decoration: none !important;
+  margin-left: 1ex;
+  /* unfitted */
+  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+  color: var(--sklearn-color-unfitted-level-1);
+}
+
+.sk-estimator-doc-link.fitted,
+a:link.sk-estimator-doc-link.fitted,
+a:visited.sk-estimator-doc-link.fitted {
+  /* fitted */
+  border: var(--sklearn-color-fitted-level-1) 1pt solid;
+  color: var(--sklearn-color-fitted-level-1);
+}
+
+/* On hover */
+div.sk-estimator:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover,
+div.sk-label-container:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+div.sk-estimator.fitted:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover,
+div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+/* Span, style for the box shown on hovering the info icon */
+.sk-estimator-doc-link span {
+  display: none;
+  z-index: 9999;
+  position: relative;
+  font-weight: normal;
+  right: .2ex;
+  padding: .5ex;
+  margin: .5ex;
+  width: min-content;
+  min-width: 20ex;
+  max-width: 50ex;
+  color: var(--sklearn-color-text);
+  box-shadow: 2pt 2pt 4pt #999;
+  /* unfitted */
+  background: var(--sklearn-color-unfitted-level-0);
+  border: .5pt solid var(--sklearn-color-unfitted-level-3);
+}
+
+.sk-estimator-doc-link.fitted span {
+  /* fitted */
+  background: var(--sklearn-color-fitted-level-0);
+  border: var(--sklearn-color-fitted-level-3);
+}
+
+.sk-estimator-doc-link:hover span {
+  display: block;
+}
+
+/* "?"-specific style due to the `<a>` HTML tag */
+
+#sk-container-id-8 a.estimator_doc_link {
+  float: right;
+  font-size: 1rem;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-background);
+  border-radius: 1rem;
+  height: 1rem;
+  width: 1rem;
+  text-decoration: none;
+  /* unfitted */
+  color: var(--sklearn-color-unfitted-level-1);
+  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+}
+
+#sk-container-id-8 a.estimator_doc_link.fitted {
+  /* fitted */
+  border: var(--sklearn-color-fitted-level-1) 1pt solid;
+  color: var(--sklearn-color-fitted-level-1);
+}
+
+/* On hover */
+#sk-container-id-8 a.estimator_doc_link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+#sk-container-id-8 a.estimator_doc_link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+}
+</style><div id="sk-container-id-8" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>Pipeline(steps=[('preprocessor',
+                 ColumnTransformer(remainder='passthrough',
+                                   transformers=[('dummify',
+                                                  OneHotEncoder(handle_unknown='ignore',
+                                                                sparse_output=False),
+                                                  &lt;sklearn.compose._column_transformer.make_column_selector object at 0x1761e7910&gt;),
+                                                 ('standardize',
+                                                  StandardScaler(),
+                                                  &lt;sklearn.compose._column_transformer.make_column_selector object at 0x172e5e7d0&gt;)])),
+                ('lasso', Lasso())])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-65" type="checkbox"><label for="sk-estimator-id-65" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;&nbsp;Pipeline<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.5/modules/generated/sklearn.pipeline.Pipeline.html">?<span>Documentation for Pipeline</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></label><div class="sk-toggleable__content fitted"><pre>Pipeline(steps=[('preprocessor',
+                 ColumnTransformer(remainder='passthrough',
+                                   transformers=[('dummify',
+                                                  OneHotEncoder(handle_unknown='ignore',
+                                                                sparse_output=False),
+                                                  &lt;sklearn.compose._column_transformer.make_column_selector object at 0x1761e7910&gt;),
+                                                 ('standardize',
+                                                  StandardScaler(),
+                                                  &lt;sklearn.compose._column_transformer.make_column_selector object at 0x172e5e7d0&gt;)])),
+                ('lasso', Lasso())])</pre></div> </div></div><div class="sk-serial"><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-66" type="checkbox"><label for="sk-estimator-id-66" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;preprocessor: ColumnTransformer<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.5/modules/generated/sklearn.compose.ColumnTransformer.html">?<span>Documentation for preprocessor: ColumnTransformer</span></a></label><div class="sk-toggleable__content fitted"><pre>ColumnTransformer(remainder='passthrough',
+                  transformers=[('dummify',
+                                 OneHotEncoder(handle_unknown='ignore',
+                                               sparse_output=False),
+                                 &lt;sklearn.compose._column_transformer.make_column_selector object at 0x1761e7910&gt;),
+                                ('standardize', StandardScaler(),
+                                 &lt;sklearn.compose._column_transformer.make_column_selector object at 0x172e5e7d0&gt;)])</pre></div> </div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-67" type="checkbox"><label for="sk-estimator-id-67" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">dummify</label><div class="sk-toggleable__content fitted"><pre>&lt;sklearn.compose._column_transformer.make_column_selector object at 0x1761e7910&gt;</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-68" type="checkbox"><label for="sk-estimator-id-68" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;OneHotEncoder<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.5/modules/generated/sklearn.preprocessing.OneHotEncoder.html">?<span>Documentation for OneHotEncoder</span></a></label><div class="sk-toggleable__content fitted"><pre>OneHotEncoder(handle_unknown='ignore', sparse_output=False)</pre></div> </div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-69" type="checkbox"><label for="sk-estimator-id-69" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">standardize</label><div class="sk-toggleable__content fitted"><pre>&lt;sklearn.compose._column_transformer.make_column_selector object at 0x172e5e7d0&gt;</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-70" type="checkbox"><label for="sk-estimator-id-70" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;StandardScaler<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.5/modules/generated/sklearn.preprocessing.StandardScaler.html">?<span>Documentation for StandardScaler</span></a></label><div class="sk-toggleable__content fitted"><pre>StandardScaler()</pre></div> </div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-71" type="checkbox"><label for="sk-estimator-id-71" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">remainder</label><div class="sk-toggleable__content fitted"><pre>[]</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-72" type="checkbox"><label for="sk-estimator-id-72" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">passthrough</label><div class="sk-toggleable__content fitted"><pre>passthrough</pre></div> </div></div></div></div></div></div></div><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-73" type="checkbox"><label for="sk-estimator-id-73" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;Lasso<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.5/modules/generated/sklearn.linear_model.Lasso.html">?<span>Documentation for Lasso</span></a></label><div class="sk-toggleable__content fitted"><pre>Lasso()</pre></div> </div></div></div></div></div></div>
+</div>
+</div>
+<div id="ebeb2cee" class="cell" data-execution_count="116">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>lasso_coefficients <span class="op">=</span> lasso_pipeline.named_steps[<span class="st">"lasso"</span>].coef_</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>lasso_coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="116">
+<pre><code>array([-4.81652839e+03,  1.22724439e+03, -4.41885541e+03,  7.51982576e+03,
+        3.53293929e+03, -1.15175663e+03, -2.04473222e+04,  3.92049217e-09,
+       -1.41031927e+03,  4.70209827e+03,  4.83124102e+02, -1.26904092e+01,
+       -9.03194952e+03,  5.48345937e+03, -1.09548228e+04,  1.19715987e+02,
+        1.48059948e+04, -2.46716222e+03,  0.00000000e+00,  2.89970113e+02,
+        6.47083982e+03, -6.06559741e+03, -4.80860054e+03, -0.00000000e+00,
+       -0.00000000e+00,  6.66914878e+03, -1.63491350e+04,  3.88720104e+03,
+        1.02876243e+04,  1.35648346e+04,  1.05643345e+03, -4.16387582e+03,
+       -6.38723226e+03,  1.16048567e+04, -1.37388021e+04, -7.33924495e+03,
+        1.20934300e+04,  1.32015734e+05, -5.39197495e+03,  0.00000000e+00,
+        7.56702466e+03, -1.01640833e+04, -1.01751839e+04,  1.84286710e+04,
+       -1.33019305e+04,  3.10914289e+04,  2.52024813e+04, -9.36511398e+03,
+       -7.37390650e+03, -5.84233241e+03, -7.33009072e+03,  1.60093014e+04,
+        4.27819615e+04, -4.11202868e+03, -7.19672101e+03, -2.09327946e+03,
+       -0.00000000e+00,  8.09540209e+03,  6.61843072e+03,  1.43357981e+04,
+       -4.58176549e+03,  1.03135473e+03, -4.12604862e+03, -8.12167463e+03,
+       -0.00000000e+00, -6.59905050e+03, -1.58372646e+03,  5.68394823e+04,
+       -1.11624851e+05,  6.08788556e+04,  0.00000000e+00,  8.50667897e+02,
+        1.03935549e+04,  9.61407049e+03,  0.00000000e+00, -1.42052812e+04,
+       -7.47698607e+03, -6.03037846e+02,  8.52567088e+03,  7.97594651e+03,
+       -1.19824048e+04, -6.45663917e+02, -3.84185182e+03,  8.05651368e+03,
+        1.61932653e+03, -2.63044593e+04,  5.80366944e+02,  2.90897395e+00,
+        2.27120099e+03, -9.20432205e+03, -9.00651004e+03, -6.14586360e+05,
+       -1.15721615e+04,  5.41088616e+04,  4.38271086e+04, -9.87398326e+02,
+        1.23139306e+01, -1.16567966e+04,  5.88307236e+04,  3.77148940e+03,
+        6.79415667e+03,  1.03235690e+04,  2.26596245e+04, -2.21161621e+02,
+       -2.08450913e+03, -2.82232092e+03, -2.72608892e+04,  3.62350428e+03,
+       -5.69219133e+02,  7.61673057e+04, -0.00000000e+00,  2.43584331e+03,
+       -5.34618297e+03,  2.05212288e+03, -4.09633512e+02, -3.03709970e+03,
+        1.66565853e+04, -2.71811549e+03, -8.97549546e+03, -1.97137881e+03,
+        2.02781043e+03,  2.24796100e+03,  1.04920463e+04,  6.76661208e+02,
+       -1.25470262e+04, -0.00000000e+00,  6.23765038e+02, -1.62218812e+04,
+        2.30986954e+03,  8.00424955e+03, -3.45792064e+02, -0.00000000e+00,
+        2.46452590e+04,  6.86505663e+03, -9.18528371e-02, -1.68303733e+03,
+       -5.44149274e+03, -6.14941053e+03,  1.69374669e+02, -0.00000000e+00,
+        4.86279119e+02, -7.35914285e+02, -0.00000000e+00,  2.30833905e+03,
+        1.19455454e+04, -1.00710531e+04,  1.73094763e+04,  2.06133391e+03,
+       -1.37317323e+03, -1.53352476e+03,  0.00000000e+00, -5.77384031e+03,
+        1.21735344e+03, -3.65328230e+02,  1.03353025e+04,  0.00000000e+00,
+        6.15784021e+03,  1.64066327e+04, -8.81028100e+02, -1.05140108e+03,
+        1.58855578e+00, -7.74092104e+02,  3.45770638e+03, -4.52797192e+03,
+       -2.82965790e+03,  2.04558196e+03,  3.98205677e+03, -4.04628376e+03,
+        7.97892770e+03, -6.89457710e+03, -4.88540553e+03,  2.23966508e+02,
+        1.63967443e+03, -0.00000000e+00,  0.00000000e+00, -2.85121698e+04,
+        3.04954536e+03, -1.73482500e+03,  1.18773692e+03, -5.00293658e+03,
+       -0.00000000e+00,  3.00003250e+03, -0.00000000e+00,  3.40007035e+02,
+       -2.87549774e+03, -9.97138680e+02,  2.89899740e+03, -0.00000000e+00,
+        2.24288270e+04, -3.85757145e+02,  0.00000000e+00,  2.64309771e+04,
+       -4.56729982e+02,  0.00000000e+00, -9.56722843e+03,  5.95169199e+03,
+        5.53860911e+03, -1.65409956e+03, -0.00000000e+00, -2.01874519e+04,
+        1.36445048e+04,  2.00079181e+02, -1.14257116e+03, -0.00000000e+00,
+       -5.41358213e+03,  3.37521648e+03,  2.71056927e+04,  5.12541836e+03,
+       -2.43479368e+03, -6.52402633e+00,  8.16575338e+03,  2.03550663e+03,
+       -5.46045162e+03, -1.64213959e+03, -6.65265922e+03,  1.54538118e+04,
+        2.37763400e+03, -5.13058857e+03,  4.51518613e+02, -3.92967200e+02,
+       -3.10287820e+03,  4.59087714e+03,  1.01106862e+04,  6.37226676e+03,
+        8.77048517e+03,  1.76520292e+03,  2.26405839e+03,  1.06900163e+04,
+        3.48090439e+03,  2.20721657e+03,  3.17509922e+03,  1.56530426e+04,
+        2.30736144e+04,  1.51517256e+03,  5.01815210e+03,  1.01380463e+03,
+       -9.89209245e+02,  2.17351311e+03,  1.21782441e+03, -2.19807493e+03,
+       -2.12807902e+03,  6.24154122e+01,  2.30653060e+03,  2.02769030e+03,
+        3.12514551e+03,  7.15197115e+02, -7.73367308e+02,  3.09843027e+02,
+        0.00000000e+00,  2.66180501e+03,  2.75415865e+03, -5.10865997e+03,
+       -7.74503204e+02, -6.18548189e+02])</code></pre>
+</div>
+</div>
+<div id="a26027c0" class="cell" data-execution_count="55">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> GridSearchCV</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>param_grid <span class="op">=</span> {</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"lasso__alpha"</span>: [<span class="fl">0.001</span>, <span class="fl">0.01</span>, <span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">10</span>]</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>grid_search <span class="op">=</span> GridSearchCV(lasso_pipeline, param_grid, cv<span class="op">=</span><span class="dv">5</span>, scoring<span class="op">=</span><span class="st">"r2"</span>)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>grid_search.fit(X, y)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>best_lasso_model <span class="op">=</span> grid_search.best_estimator_</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>best_alpha_lasso <span class="op">=</span> grid_search.best_params_[<span class="st">"lasso__alpha"</span>]</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Best alpha for LASSO: </span><span class="sc">{</span>best_alpha_lasso<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>best_lasso_model.fit(X, y)</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>lasso_coefficients <span class="op">=</span> best_lasso_model.named_steps[<span class="st">"lasso"</span>].coef_</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"LASSO Coefficients with best alpha:"</span>, lasso_coefficients)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.109e+11, tolerance: 1.348e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.466e+11, tolerance: 1.474e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.988e+11, tolerance: 1.463e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.756e+11, tolerance: 1.407e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.456e+11, tolerance: 1.477e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.215e+11, tolerance: 1.348e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.570e+11, tolerance: 1.474e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.585e+11, tolerance: 1.463e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.218e+11, tolerance: 1.407e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 2.553e+11, tolerance: 1.477e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.013e+09, tolerance: 1.477e+09</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Best alpha for LASSO: 10
+LASSO Coefficients with best alpha: [-4.51898958e+03  0.00000000e+00 -0.00000000e+00  4.59256134e+03
+  2.31827307e+03 -2.08235173e+03 -1.70965918e+04  8.33370201e-10
+ -1.16351324e+03  4.37136675e+03 -0.00000000e+00  0.00000000e+00
+ -9.49462247e+03  5.42684544e+03 -9.44561591e+03  1.35861380e+02
+  3.64335710e+03 -0.00000000e+00 -0.00000000e+00  7.90332217e+01
+  6.36350586e+03 -5.95620348e+03 -2.90507491e+03  0.00000000e+00
+ -0.00000000e+00  6.16612008e+03 -1.10426840e+04  4.81758840e+03
+  8.94742519e+03  1.31928184e+04  3.75089101e+03 -0.00000000e+00
+ -2.66427635e+03  1.46845352e+04 -1.01570542e+04 -3.79902131e+03
+  1.02574836e+04  1.09304458e+05 -2.35734919e+03  0.00000000e+00
+  7.12699605e+03 -6.36780861e+03 -6.32679579e+03  1.49640904e+04
+ -9.25353657e+03  3.49564239e+04  2.80292835e+04 -6.33356337e+03
+ -3.72792988e+03 -1.84028112e+03 -3.36693040e+03  1.87963345e+04
+  4.46064027e+04 -3.30087424e+02 -2.60186271e+03 -1.33724270e+03
+ -0.00000000e+00  8.09252946e+03  6.31479167e+03  1.29896232e+04
+ -3.97709685e+03  6.52878256e+02 -0.00000000e+00 -4.84906765e+03
+  0.00000000e+00 -1.83744063e+03 -0.00000000e+00  5.21285218e+04
+ -1.00831000e+05  2.29395383e+04  0.00000000e+00  0.00000000e+00
+  1.00859670e+04  1.02604690e+04  0.00000000e+00 -1.12732010e+04
+ -5.36695737e+03 -6.11524547e+02  6.06248109e+03  6.48785457e+03
+ -4.70347957e+03 -1.80229770e+02 -3.62883876e+03  6.47952900e+03
+  9.84282813e+02 -9.83866099e+03  5.56985035e+02  0.00000000e+00
+  2.23182329e+03 -5.67070340e+03 -0.00000000e+00 -5.66914925e+05
+ -1.29180105e+03  1.41124620e+04  4.08299102e+03  0.00000000e+00
+ -0.00000000e+00 -1.02883359e+03  6.27031027e+04  0.00000000e+00
+  0.00000000e+00  8.78188113e+02  1.98848454e+04 -0.00000000e+00
+ -7.50540668e+01 -2.02859923e+03 -0.00000000e+00  2.80751593e+03
+ -2.46142773e-01  4.39289475e+04 -0.00000000e+00  0.00000000e+00
+ -4.42465428e+03  1.12160606e+03 -1.57523802e+02 -0.00000000e+00
+  7.38537088e+03  0.00000000e+00 -6.96726618e+03 -0.00000000e+00
+ -0.00000000e+00  3.34188498e+02  5.69972515e+03  0.00000000e+00
+ -0.00000000e+00 -1.33474939e+03  0.00000000e+00 -1.91954595e+03
+  1.92178442e+03  5.97312417e+03 -6.22297159e+02 -9.27329979e+02
+  2.38166176e+04  5.42838893e+03 -3.92690885e+02 -2.09836328e+03
+ -2.67673389e+03 -4.24774171e+03  7.34171160e+02 -0.00000000e+00
+  1.07506694e+03 -6.48551134e+02  0.00000000e+00  2.37589371e+03
+  8.76710000e+03 -4.69157894e+03  1.82477628e+04  1.86752457e+03
+ -1.11994315e+03 -0.00000000e+00 -0.00000000e+00 -0.00000000e+00
+  7.09663430e+02 -4.22167595e+02  2.27185068e+03 -0.00000000e+00
+  5.93809058e+03  1.64023145e+04 -1.16894926e+03 -1.40204584e+03
+  2.19783770e+02 -4.42115947e+02  3.44861165e+03 -4.15943930e+03
+ -2.38193710e+03  1.73283948e+03  3.51638026e+03 -3.66652877e+03
+  7.26044437e+03 -6.00761204e+03 -4.19322460e+03  1.52460960e+02
+  1.36840456e+03 -0.00000000e+00  0.00000000e+00 -1.57530061e+04
+  3.00587591e+03 -1.86641184e+03  1.14926679e+03 -0.00000000e+00
+ -0.00000000e+00  2.57686074e+03 -2.79429262e-13  1.68801473e+02
+ -1.60038308e+03 -0.00000000e+00  0.00000000e+00 -0.00000000e+00
+  2.22495227e+04 -0.00000000e+00 -0.00000000e+00  0.00000000e+00
+ -5.71639094e+02 -0.00000000e+00 -3.78934465e+03  4.33148109e+03
+  4.13507590e+03 -0.00000000e+00 -0.00000000e+00 -1.10317016e+04
+  1.26508989e+04  2.55530001e+02 -1.12067050e+03  0.00000000e+00
+ -6.34694910e+03  0.00000000e+00  1.96923043e+04  1.31671466e+03
+ -1.46672687e+03 -0.00000000e+00  5.55758434e+03  0.00000000e+00
+ -0.00000000e+00 -3.27960169e+03 -7.57971990e+03  1.06129562e+04
+  6.38202756e+02 -5.23193705e+03 -0.00000000e+00  0.00000000e+00
+ -3.51622898e+03  4.25404973e+03  1.03445695e+04  6.32854605e+03
+  8.43225954e+03  1.81789395e+03  2.25493275e+03  8.93500787e+03
+  2.69920596e+03  9.12078984e+02  4.47826425e+03  1.48019952e+04
+  2.16210495e+04  1.20474369e+03  5.75187803e+03  1.08300283e+03
+ -1.02134670e+03  2.14873408e+03  1.24898526e+03 -2.19189756e+03
+ -1.90956058e+03  2.52257263e+02  2.47257937e+03  2.04456026e+03
+  3.10667095e+03  6.69195176e+02 -7.64990863e+02  3.81219404e+02
+  4.91332494e+01  2.60418444e+03  2.57770812e+03 -4.86264809e+03
+ -7.59350040e+02 -6.58663175e+02]</code></pre>
+</div>
+</div>
+<div id="274b98ad" class="cell" data-execution_count="68">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Lambda"</span>: param_grid[<span class="st">"lasso__alpha"</span>],</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"R²_ridge"</span>: gscv_fit.cv_results_[<span class="st">'mean_test_score'</span>],</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Lasso R² Score"</span>: grid_search.cv_results_[<span class="st">'mean_test_score'</span>]</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>results_sorted <span class="op">=</span> results.sort_values(by<span class="op">=</span><span class="st">"Lasso R² Score"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(results_sorted.head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Lambda  R²_ridge  Lasso R² Score
+4  10.000  0.864272        0.860632
+3   1.000  0.861932        0.857152
+2   0.100  0.856302        0.856607
+1   0.010  0.854186        0.856566
+0   0.001  0.853920        0.855601</code></pre>
+</div>
+</div>
+<p>Both models perform best at λ= 10 but achieve similar scores overall, with Ridge reaching 0.864 and LASSO 0.861.</p>
+<p>Coefficient Comparison:</p>
+<p>Ridge: Coefficients are generally smaller and more evenly distributed, as Ridge penalizes large coefficients, spreading influence across many features. LASSO: With higher regularization, LASSO drives some coefficients to zero, performing feature selection and simplifying the model, which could enhance interpretability without drastically reducing performance compared to Ridge or OLS.</p>
+<div id="3818f7c1" class="cell" data-execution_count="118">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>elastic_net_pipeline <span class="op">=</span> Pipeline([</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"preprocessor"</span>, ct),  </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"elastic_net"</span>, ElasticNet())</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="b7b2057b" class="cell" data-execution_count="119">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>cv_scores <span class="op">=</span> cross_val_score(elastic_net_pipeline, X, y, cv<span class="op">=</span><span class="dv">5</span>, scoring<span class="op">=</span><span class="st">"r2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="a884b7df" class="cell" data-execution_count="120">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>elastic_net_pipeline.fit(X, y)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>default_elastic_net_coefficients <span class="op">=</span> elastic_net_pipeline.named_steps[<span class="st">"elastic_net"</span>].coef_</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>default_elastic_net_coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="120">
+<pre><code>array([-1.41971922e+02,  3.49433582e+02, -2.03580414e+01, -5.50851860e+01,
+        1.19278794e+03, -1.32280672e+03, -1.62088197e+02,  1.62088197e+02,
+        1.20556585e+03,  4.53852497e+02, -3.23910163e+02, -1.33550888e+03,
+       -1.01959675e+03,  1.78364939e+03,  3.73732791e+01, -8.01425975e+02,
+        6.48076760e+01, -3.10352740e+01, -3.27724020e+01, -4.64171474e+02,
+        1.06965273e+03, -3.89430628e+02, -4.94795451e+01, -1.63571034e+02,
+       -7.68560979e+02,  8.11751119e+02, -4.21901543e+01, -2.80646693e+02,
+       -1.70414981e+01, -2.17215254e+02,  2.65237116e+02,  2.72005729e+01,
+       -1.07250023e+03,  1.18511274e+03, -1.16462268e+03, -9.82172859e+02,
+        2.14559216e+01,  8.67592166e+01, -2.20022688e+02, -9.47995459e+00,
+       -7.26218253e+01, -4.68320312e+02, -1.08213199e+03, -2.92015469e+01,
+       -1.03046500e+03,  1.58235398e+03,  3.10851930e+03, -7.59182036e+02,
+       -1.49004190e+02, -2.52738636e+02, -6.97839903e+02,  5.19177028e+02,
+        1.64043545e+03, -1.24196749e+01,  8.93755209e+01, -4.40605345e+02,
+       -9.70438132e+02,  1.60410637e+03,  2.44075517e+02,  1.40231143e+02,
+       -2.49134137e+02, -1.91020357e+02, -6.42015063e+01, -7.00133996e+01,
+       -9.15291584e+00, -5.57022219e+01, -1.04117097e+02,  2.89475925e+02,
+       -1.16483688e+02,  1.29451238e+01, -1.22858612e+01, -6.79263320e-01,
+        1.45849603e+03,  6.50578957e+00, -6.07944407e+02, -6.32914163e+02,
+       -2.23142940e+02, -7.53687954e+01,  7.09494578e+01, -1.30317598e+00,
+        3.85944209e+01, -2.34248104e+00,  4.42803915e+02, -4.39852474e+01,
+       -4.27347827e+02, -1.68954724e+01, -2.01306126e+03, -2.71337523e+01,
+        2.17878596e+03, -1.26588494e+02,  6.89321403e+00, -3.46263748e+02,
+        3.06812619e+01,  1.78462781e+01,  4.87801481e+00, -6.87695751e+00,
+       -1.77537038e+01, -8.04751300e+01,  3.97963984e+02, -1.24316325e+02,
+        1.81768589e+01, -0.00000000e+00,  8.67630162e+02, -1.67115288e+00,
+        1.10514562e+03, -1.09033054e+03,  4.50664258e+00,  2.95214812e+02,
+       -8.97753676e+02,  5.43396945e+01,  1.31870966e+01, -3.24569413e+02,
+        5.55677956e+02, -4.19577690e+02, -5.62463050e+01, -9.60364624e+01,
+        2.66862841e+01, -6.47035897e+01,  3.05014729e+02, -1.67115361e+00,
+        1.09175382e+03, -9.10814861e+02,  2.59860785e+02,  3.72161885e+02,
+        1.07605011e+01, -1.01584699e+03,  5.43396938e+01,  2.60272463e+01,
+       -3.24358698e+02,  6.01524396e+02, -2.76262250e+02, -5.94345316e+01,
+        3.18369914e+03, -4.92044915e+01,  6.22028916e+02, -3.75652578e+03,
+        1.13050948e+02, -3.79878522e+02, -8.80858190e+01, -1.79662852e+01,
+        3.73880090e+02, -4.57308458e+02, -2.14111924e+03,  2.57875924e+03,
+        5.77296146e+01, -3.70600302e+01,  5.14294858e+03, -2.17282567e+02,
+       -2.58638559e+03,  1.57440270e+00, -2.33985473e+03,  2.85243007e+00,
+       -3.71693576e+02,  3.05451825e+02, -0.00000000e+00,  6.22138311e+01,
+        5.81619810e+02,  3.01436999e+03, -5.20444385e+02, -3.07554561e+03,
+       -6.25744763e+02, -3.16453970e+02,  2.82814968e+03, -3.95487465e+02,
+       -6.12674926e+02, -8.73787945e+02,  3.02533783e+02, -2.05760941e+02,
+        2.53247454e+02, -3.47605364e+02, -3.53091672e+02,  3.50676854e+02,
+        9.42484655e+01, -3.89874142e+01, -1.38817766e+01, -3.93792777e+01,
+        2.50204422e+03, -3.78687883e+02, -3.93193744e+02, -2.02711160e+01,
+       -1.70689099e+03, -3.02465111e+02,  3.02465063e+02,  3.41794131e+01,
+       -1.12632941e+02, -3.89096989e+00, -1.56377964e+01,  9.89821635e+01,
+        4.83022401e+03, -6.48243599e+01, -1.37755079e+03,  7.01716723e+00,
+       -3.39386425e+03, -2.79892511e+02, -1.08205603e+02, -3.49473782e+02,
+       -3.30303038e+02, -1.75245109e+02, -2.68482788e+01, -8.25701803e+01,
+        1.35853862e+03, -3.53436121e+02, -7.96468774e+01,  4.34082852e+02,
+       -7.61242559e+02,  2.55255723e+01,  1.06066453e+02, -7.27220356e+01,
+        2.46422676e+00,  4.37168961e+00,  2.00861374e+03, -9.81841673e+00,
+       -1.43833533e+01, -1.28887530e+03, -1.16197531e+03, -2.05279050e+01,
+        1.57469553e+01, -2.91510631e+02, -5.34804692e+02,  1.99507144e+03,
+       -2.83859718e+03,  2.83135483e+03,  1.24200191e+04,  3.04308181e+03,
+        4.36252599e+03,  4.42450561e+03,  5.50141736e+03,  4.88394893e+03,
+        7.59096319e+02,  3.61532194e+02,  6.16079416e+03,  6.51332790e+03,
+        4.76021257e+03, -2.70569439e+02,  9.03882349e+03,  2.93452798e+03,
+       -6.34742992e+02,  3.64302840e+03,  2.37902380e+03, -9.86976683e+02,
+       -2.87469732e+03,  4.71573521e+03,  4.56912500e+03,  4.76314085e+03,
+        4.80695112e+03,  2.58649372e+03,  7.72012697e+02,  3.17972428e+02,
+        3.23994271e+02,  2.59736255e+03,  9.96885261e+01, -3.15750480e+03,
+       -7.81377784e+01, -6.47465236e+02])</code></pre>
+</div>
+</div>
+<div id="614bdb3c" class="cell" data-execution_count="73">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>elastic_net_pipeline <span class="op">=</span> Pipeline([</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"preprocessor"</span>, ct),</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"elastic_net"</span>, ElasticNet(max_iter<span class="op">=</span><span class="dv">10000</span>))</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>param_grid <span class="op">=</span> {</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"elastic_net__alpha"</span>: [<span class="fl">0.001</span>, <span class="fl">0.01</span>, <span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">10</span>],</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"elastic_net__l1_ratio"</span>: [<span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>, <span class="fl">0.9</span>]  <span class="co"># Mixing between LASSO and Ridge</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>grid_search <span class="op">=</span> GridSearchCV(elastic_net_pipeline, param_grid, cv<span class="op">=</span><span class="dv">5</span>, scoring<span class="op">=</span><span class="st">"r2"</span>)</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>grid_search.fit(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 1.831e+09, tolerance: 1.348e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 4.136e+09, tolerance: 1.474e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 8.619e+09, tolerance: 1.463e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 5.054e+09, tolerance: 1.407e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 3.556e+09, tolerance: 1.477e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 5.340e+11, tolerance: 1.348e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 6.043e+11, tolerance: 1.474e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 5.313e+11, tolerance: 1.463e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 4.380e+11, tolerance: 1.407e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 6.016e+11, tolerance: 1.477e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 5.530e+11, tolerance: 1.348e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 6.281e+11, tolerance: 1.474e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 5.791e+11, tolerance: 1.463e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 4.477e+11, tolerance: 1.407e+09
+/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/sklearn/linear_model/_coordinate_descent.py:697: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations, check the scale of the features or consider increasing regularisation. Duality gap: 6.286e+11, tolerance: 1.477e+09</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="73">
+<style>#sk-container-id-5 {
+  /* Definition of color scheme common for light and dark mode */
+  --sklearn-color-text: black;
+  --sklearn-color-line: gray;
+  /* Definition of color scheme for unfitted estimators */
+  --sklearn-color-unfitted-level-0: #fff5e6;
+  --sklearn-color-unfitted-level-1: #f6e4d2;
+  --sklearn-color-unfitted-level-2: #ffe0b3;
+  --sklearn-color-unfitted-level-3: chocolate;
+  /* Definition of color scheme for fitted estimators */
+  --sklearn-color-fitted-level-0: #f0f8ff;
+  --sklearn-color-fitted-level-1: #d4ebff;
+  --sklearn-color-fitted-level-2: #b3dbfd;
+  --sklearn-color-fitted-level-3: cornflowerblue;
+
+  /* Specific color for light theme */
+  --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
+  --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, white)));
+  --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
+  --sklearn-color-icon: #696969;
+
+  @media (prefers-color-scheme: dark) {
+    /* Redefinition of color scheme for dark theme */
+    --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
+    --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, #111)));
+    --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
+    --sklearn-color-icon: #878787;
+  }
+}
+
+#sk-container-id-5 {
+  color: var(--sklearn-color-text);
+}
+
+#sk-container-id-5 pre {
+  padding: 0;
+}
+
+#sk-container-id-5 input.sk-hidden--visually {
+  border: 0;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+#sk-container-id-5 div.sk-dashed-wrapped {
+  border: 1px dashed var(--sklearn-color-line);
+  margin: 0 0.4em 0.5em 0.4em;
+  box-sizing: border-box;
+  padding-bottom: 0.4em;
+  background-color: var(--sklearn-color-background);
+}
+
+#sk-container-id-5 div.sk-container {
+  /* jupyter's `normalize.less` sets `[hidden] { display: none; }`
+     but bootstrap.min.css set `[hidden] { display: none !important; }`
+     so we also need the `!important` here to be able to override the
+     default hidden behavior on the sphinx rendered scikit-learn.org.
+     See: https://github.com/scikit-learn/scikit-learn/issues/21755 */
+  display: inline-block !important;
+  position: relative;
+}
+
+#sk-container-id-5 div.sk-text-repr-fallback {
+  display: none;
+}
+
+div.sk-parallel-item,
+div.sk-serial,
+div.sk-item {
+  /* draw centered vertical line to link estimators */
+  background-image: linear-gradient(var(--sklearn-color-text-on-default-background), var(--sklearn-color-text-on-default-background));
+  background-size: 2px 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+/* Parallel-specific style estimator block */
+
+#sk-container-id-5 div.sk-parallel-item::after {
+  content: "";
+  width: 100%;
+  border-bottom: 2px solid var(--sklearn-color-text-on-default-background);
+  flex-grow: 1;
+}
+
+#sk-container-id-5 div.sk-parallel {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  background-color: var(--sklearn-color-background);
+  position: relative;
+}
+
+#sk-container-id-5 div.sk-parallel-item {
+  display: flex;
+  flex-direction: column;
+}
+
+#sk-container-id-5 div.sk-parallel-item:first-child::after {
+  align-self: flex-end;
+  width: 50%;
+}
+
+#sk-container-id-5 div.sk-parallel-item:last-child::after {
+  align-self: flex-start;
+  width: 50%;
+}
+
+#sk-container-id-5 div.sk-parallel-item:only-child::after {
+  width: 0;
+}
+
+/* Serial-specific style estimator block */
+
+#sk-container-id-5 div.sk-serial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--sklearn-color-background);
+  padding-right: 1em;
+  padding-left: 1em;
+}
+
+
+/* Toggleable style: style used for estimator/Pipeline/ColumnTransformer box that is
+clickable and can be expanded/collapsed.
+- Pipeline and ColumnTransformer use this feature and define the default style
+- Estimators will overwrite some part of the style using the `sk-estimator` class
+*/
+
+/* Pipeline and ColumnTransformer style (default) */
+
+#sk-container-id-5 div.sk-toggleable {
+  /* Default theme specific background. It is overwritten whether we have a
+  specific estimator or a Pipeline/ColumnTransformer */
+  background-color: var(--sklearn-color-background);
+}
+
+/* Toggleable label */
+#sk-container-id-5 label.sk-toggleable__label {
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  margin-bottom: 0;
+  padding: 0.5em;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+#sk-container-id-5 label.sk-toggleable__label-arrow:before {
+  /* Arrow on the left of the label */
+  content: "▸";
+  float: left;
+  margin-right: 0.25em;
+  color: var(--sklearn-color-icon);
+}
+
+#sk-container-id-5 label.sk-toggleable__label-arrow:hover:before {
+  color: var(--sklearn-color-text);
+}
+
+/* Toggleable content - dropdown */
+
+#sk-container-id-5 div.sk-toggleable__content {
+  max-height: 0;
+  max-width: 0;
+  overflow: hidden;
+  text-align: left;
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-5 div.sk-toggleable__content.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-5 div.sk-toggleable__content pre {
+  margin: 0.2em;
+  border-radius: 0.25em;
+  color: var(--sklearn-color-text);
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-5 div.sk-toggleable__content.fitted pre {
+  /* unfitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-5 input.sk-toggleable__control:checked~div.sk-toggleable__content {
+  /* Expand drop-down */
+  max-height: 200px;
+  max-width: 100%;
+  overflow: auto;
+}
+
+#sk-container-id-5 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {
+  content: "▾";
+}
+
+/* Pipeline/ColumnTransformer-specific style */
+
+#sk-container-id-5 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-5 div.sk-label.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Estimator-specific style */
+
+/* Colorize estimator box */
+#sk-container-id-5 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-5 div.sk-estimator.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+#sk-container-id-5 div.sk-label label.sk-toggleable__label,
+#sk-container-id-5 div.sk-label label {
+  /* The background is the default theme color */
+  color: var(--sklearn-color-text-on-default-background);
+}
+
+/* On hover, darken the color of the background */
+#sk-container-id-5 div.sk-label:hover label.sk-toggleable__label {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+/* Label box, darken color on hover, fitted */
+#sk-container-id-5 div.sk-label.fitted:hover label.sk-toggleable__label.fitted {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Estimator label */
+
+#sk-container-id-5 div.sk-label label {
+  font-family: monospace;
+  font-weight: bold;
+  display: inline-block;
+  line-height: 1.2em;
+}
+
+#sk-container-id-5 div.sk-label-container {
+  text-align: center;
+}
+
+/* Estimator-specific */
+#sk-container-id-5 div.sk-estimator {
+  font-family: monospace;
+  border: 1px dotted var(--sklearn-color-border-box);
+  border-radius: 0.25em;
+  box-sizing: border-box;
+  margin-bottom: 0.5em;
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-5 div.sk-estimator.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+/* on hover */
+#sk-container-id-5 div.sk-estimator:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-5 div.sk-estimator.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Specification for estimator info (e.g. "i" and "?") */
+
+/* Common style for "i" and "?" */
+
+.sk-estimator-doc-link,
+a:link.sk-estimator-doc-link,
+a:visited.sk-estimator-doc-link {
+  float: right;
+  font-size: smaller;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-background);
+  border-radius: 1em;
+  height: 1em;
+  width: 1em;
+  text-decoration: none !important;
+  margin-left: 1ex;
+  /* unfitted */
+  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+  color: var(--sklearn-color-unfitted-level-1);
+}
+
+.sk-estimator-doc-link.fitted,
+a:link.sk-estimator-doc-link.fitted,
+a:visited.sk-estimator-doc-link.fitted {
+  /* fitted */
+  border: var(--sklearn-color-fitted-level-1) 1pt solid;
+  color: var(--sklearn-color-fitted-level-1);
+}
+
+/* On hover */
+div.sk-estimator:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover,
+div.sk-label-container:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+div.sk-estimator.fitted:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover,
+div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+/* Span, style for the box shown on hovering the info icon */
+.sk-estimator-doc-link span {
+  display: none;
+  z-index: 9999;
+  position: relative;
+  font-weight: normal;
+  right: .2ex;
+  padding: .5ex;
+  margin: .5ex;
+  width: min-content;
+  min-width: 20ex;
+  max-width: 50ex;
+  color: var(--sklearn-color-text);
+  box-shadow: 2pt 2pt 4pt #999;
+  /* unfitted */
+  background: var(--sklearn-color-unfitted-level-0);
+  border: .5pt solid var(--sklearn-color-unfitted-level-3);
+}
+
+.sk-estimator-doc-link.fitted span {
+  /* fitted */
+  background: var(--sklearn-color-fitted-level-0);
+  border: var(--sklearn-color-fitted-level-3);
+}
+
+.sk-estimator-doc-link:hover span {
+  display: block;
+}
+
+/* "?"-specific style due to the `<a>` HTML tag */
+
+#sk-container-id-5 a.estimator_doc_link {
+  float: right;
+  font-size: 1rem;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-background);
+  border-radius: 1rem;
+  height: 1rem;
+  width: 1rem;
+  text-decoration: none;
+  /* unfitted */
+  color: var(--sklearn-color-unfitted-level-1);
+  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+}
+
+#sk-container-id-5 a.estimator_doc_link.fitted {
+  /* fitted */
+  border: var(--sklearn-color-fitted-level-1) 1pt solid;
+  color: var(--sklearn-color-fitted-level-1);
+}
+
+/* On hover */
+#sk-container-id-5 a.estimator_doc_link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+#sk-container-id-5 a.estimator_doc_link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+}
+</style><div id="sk-container-id-5" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>GridSearchCV(cv=5,
+             estimator=Pipeline(steps=[('preprocessor',
+                                        ColumnTransformer(remainder='passthrough',
+                                                          transformers=[('dummify',
+                                                                         OneHotEncoder(handle_unknown='ignore',
+                                                                                       sparse_output=False),
+                                                                         &lt;sklearn.compose._column_transformer.make_column_selector object at 0x16e90fc10&gt;),
+                                                                        ('standardize',
+                                                                         StandardScaler(),
+                                                                         &lt;sklearn.compose._column_transformer.make_column_selector object at 0x16c453910&gt;)])),
+                                       ('elastic_net',
+                                        ElasticNet(max_iter=10000))]),
+             param_grid={'elastic_net__alpha': [0.001, 0.01, 0.1, 1, 10],
+                         'elastic_net__l1_ratio': [0.1, 0.5, 0.7, 0.9]},
+             scoring='r2')</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-37" type="checkbox"><label for="sk-estimator-id-37" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;&nbsp;GridSearchCV<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.5/modules/generated/sklearn.model_selection.GridSearchCV.html">?<span>Documentation for GridSearchCV</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></label><div class="sk-toggleable__content fitted"><pre>GridSearchCV(cv=5,
+             estimator=Pipeline(steps=[('preprocessor',
+                                        ColumnTransformer(remainder='passthrough',
+                                                          transformers=[('dummify',
+                                                                         OneHotEncoder(handle_unknown='ignore',
+                                                                                       sparse_output=False),
+                                                                         &lt;sklearn.compose._column_transformer.make_column_selector object at 0x16e90fc10&gt;),
+                                                                        ('standardize',
+                                                                         StandardScaler(),
+                                                                         &lt;sklearn.compose._column_transformer.make_column_selector object at 0x16c453910&gt;)])),
+                                       ('elastic_net',
+                                        ElasticNet(max_iter=10000))]),
+             param_grid={'elastic_net__alpha': [0.001, 0.01, 0.1, 1, 10],
+                         'elastic_net__l1_ratio': [0.1, 0.5, 0.7, 0.9]},
+             scoring='r2')</pre></div> </div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-38" type="checkbox"><label for="sk-estimator-id-38" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">best_estimator_: Pipeline</label><div class="sk-toggleable__content fitted"><pre>Pipeline(steps=[('preprocessor',
+                 ColumnTransformer(remainder='passthrough',
+                                   transformers=[('dummify',
+                                                  OneHotEncoder(handle_unknown='ignore',
+                                                                sparse_output=False),
+                                                  &lt;sklearn.compose._column_transformer.make_column_selector object at 0x171fda6d0&gt;),
+                                                 ('standardize',
+                                                  StandardScaler(),
+                                                  &lt;sklearn.compose._column_transformer.make_column_selector object at 0x171cff750&gt;)])),
+                ('elastic_net', ElasticNet(alpha=0.01, max_iter=10000))])</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-serial"><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-39" type="checkbox"><label for="sk-estimator-id-39" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;preprocessor: ColumnTransformer<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.5/modules/generated/sklearn.compose.ColumnTransformer.html">?<span>Documentation for preprocessor: ColumnTransformer</span></a></label><div class="sk-toggleable__content fitted"><pre>ColumnTransformer(remainder='passthrough',
+                  transformers=[('dummify',
+                                 OneHotEncoder(handle_unknown='ignore',
+                                               sparse_output=False),
+                                 &lt;sklearn.compose._column_transformer.make_column_selector object at 0x171fda6d0&gt;),
+                                ('standardize', StandardScaler(),
+                                 &lt;sklearn.compose._column_transformer.make_column_selector object at 0x171cff750&gt;)])</pre></div> </div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-40" type="checkbox"><label for="sk-estimator-id-40" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">dummify</label><div class="sk-toggleable__content fitted"><pre>&lt;sklearn.compose._column_transformer.make_column_selector object at 0x171fda6d0&gt;</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-41" type="checkbox"><label for="sk-estimator-id-41" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;OneHotEncoder<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.5/modules/generated/sklearn.preprocessing.OneHotEncoder.html">?<span>Documentation for OneHotEncoder</span></a></label><div class="sk-toggleable__content fitted"><pre>OneHotEncoder(handle_unknown='ignore', sparse_output=False)</pre></div> </div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-42" type="checkbox"><label for="sk-estimator-id-42" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">standardize</label><div class="sk-toggleable__content fitted"><pre>&lt;sklearn.compose._column_transformer.make_column_selector object at 0x171cff750&gt;</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-43" type="checkbox"><label for="sk-estimator-id-43" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;StandardScaler<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.5/modules/generated/sklearn.preprocessing.StandardScaler.html">?<span>Documentation for StandardScaler</span></a></label><div class="sk-toggleable__content fitted"><pre>StandardScaler()</pre></div> </div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-44" type="checkbox"><label for="sk-estimator-id-44" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">remainder</label><div class="sk-toggleable__content fitted"><pre>[]</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-45" type="checkbox"><label for="sk-estimator-id-45" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">passthrough</label><div class="sk-toggleable__content fitted"><pre>passthrough</pre></div> </div></div></div></div></div></div></div><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-46" type="checkbox"><label for="sk-estimator-id-46" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;ElasticNet<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.5/modules/generated/sklearn.linear_model.ElasticNet.html">?<span>Documentation for ElasticNet</span></a></label><div class="sk-toggleable__content fitted"><pre>ElasticNet(alpha=0.01, max_iter=10000)</pre></div> </div></div></div></div></div></div></div></div></div></div></div>
+</div>
+</div>
+<div id="2c836a54" class="cell" data-execution_count="74">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>best_elastic_net_model <span class="op">=</span> grid_search.best_estimator_</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>best_alpha_elastic_net <span class="op">=</span> grid_search.best_params_[<span class="st">"elastic_net__alpha"</span>]</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>best_l1_ratio_elastic_net <span class="op">=</span> grid_search.best_params_[<span class="st">"elastic_net__l1_ratio"</span>]</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Best alpha for Elastic Net: </span><span class="sc">{</span>best_alpha_elastic_net<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Best l1_ratio for Elastic Net: </span><span class="sc">{</span>best_l1_ratio_elastic_net<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Best alpha for Elastic Net: 0.01
+Best l1_ratio for Elastic Net: 0.5</code></pre>
+</div>
+</div>
+<div id="2b6e38f7" class="cell" data-execution_count="75">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>best_elastic_net_model.fit(X, y)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>best_elastic_net_coefficients <span class="op">=</span> best_elastic_net_model.named_steps[<span class="st">"elastic_net"</span>].coef_</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Elastic Net Coefficients with best alpha and l1_ratio:"</span>, best_elastic_net_coefficients)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Elastic Net Coefficients with best alpha and l1_ratio: [-4.36707308e+03  2.58930223e+03 -9.19417256e+02  3.85391901e+03
+  2.21693900e+03 -3.37366992e+03 -5.42673008e+03  5.42673008e+03
+  1.86723281e+03  6.98591103e+03 -1.10890052e+04  2.23386166e+03
+ -1.09990709e+04  8.99233086e+03 -1.25763969e+03  3.26437971e+03
+  2.26595132e+03 -1.82550582e+03 -4.39445496e+02 -1.94736059e+01
+  7.32006917e+03 -5.43410236e+03 -2.44365648e+03  5.78163328e+02
+ -6.16362158e+02  5.18209095e+03 -4.56472885e+03 -3.87569980e+03
+  1.90088632e+03  4.70492376e+03  3.00238868e+02 -3.50912489e+03
+ -8.19981092e+03  9.22438783e+03 -1.44898566e+04 -1.06699459e+04
+  1.14082143e+03  9.02194558e+03 -5.36482446e+03 -2.84779724e+02
+  1.44588543e+03 -9.23421598e+03 -1.01670811e+04  3.40781950e+03
+ -1.23392128e+04  2.60565210e+04  2.09499477e+04 -8.52307135e+03
+ -5.88863680e+03 -5.64447612e+03 -8.43567267e+03  8.49411808e+03
+  2.82637497e+04 -5.25961559e+03 -3.02122055e+03 -2.05208353e+03
+ -4.12029951e+03  5.88166068e+03  7.06090265e+03  4.69101556e+03
+ -5.17120590e+03  4.00430991e+02 -2.88742218e+03 -3.80199871e+03
+  1.21474618e+03 -6.49176943e+02  3.44240642e+02  1.34058043e+04
+ -1.81626249e+04  2.79009548e+03  5.09418123e+02  5.43497203e+02
+  7.26563940e+03  8.90399829e+03 -5.78198019e+02 -9.80784844e+03
+ -5.78259125e+03 -2.17959601e+03  3.71966974e+03  6.68919725e+03
+ -2.54582716e+03 -1.30932874e+03 -7.12119924e+03  4.64652694e+03
+ -1.89744299e+03 -2.78109463e+03  1.17170527e+03  1.57376924e+03
+  2.99241142e+03 -3.97339435e+03  1.01460334e+03 -2.88746447e+04
+  3.68149599e+03  1.95015932e+03  1.37283517e+03  5.78973201e+02
+  4.92616042e+02 -1.90769771e+03  2.27022626e+04 -9.37818089e+02
+  1.18602373e+03  2.34008824e+03  1.43080781e+04 -6.66580070e+02
+  5.05983780e+02 -4.39157562e+03 -1.44712802e+03  5.26750354e+01
+ -5.76449781e+02  4.74085310e+03 -1.04363126e+03 -7.36108736e+03
+ -3.97197322e+03 -1.26888669e+03 -1.46457169e+03 -1.70815287e+03
+  2.09934485e+03  5.16555656e+02 -1.85413587e+03 -6.66580070e+02
+  8.85531072e+01  4.27563104e+02  6.21790032e+03  5.37585012e+01
+ -3.69623940e+02 -2.80792255e+03  4.74085310e+03 -1.73807141e+03
+ -4.14179350e+03  3.14274675e+03 -1.08550705e+03 -2.91448748e+03
+  1.39357845e+04 -5.94746108e+02 -5.09406481e+03 -8.24497353e+03
+ -2.23062399e+02 -2.29981232e+03  1.26760155e+03 -5.05075368e+02
+  1.76134847e+03 -2.40050828e+03 -1.04046705e+03  2.11806659e+03
+  3.63895951e+03 -2.31505054e+03  1.48666684e+04 -2.92413333e+03
+ -6.12685237e+03 -5.50558390e+02 -5.26212385e+03 -9.28589882e+02
+  6.27281687e+02 -1.04016122e+03  1.17056058e+03  1.69908848e+02
+  1.41429409e+03  1.13737983e+04 -6.07223029e+03 -6.71586208e+03
+  1.55229233e+03  4.75941284e+02  4.59083023e+03 -3.94107466e+03
+ -1.56925674e+03 -1.10873231e+03  4.64386631e+03 -2.64999934e+03
+  4.22951358e+03 -3.88929545e+03 -3.04289065e+03  7.08805547e+02
+  1.73735014e+03  1.88232582e+03  7.13440751e+02 -4.33511671e+03
+  2.81126765e+03 -2.12691386e+03  1.12934104e+03 -1.87945111e+03
+  6.47562506e+01  1.16819982e+03 -1.16819983e+03  1.75801573e+02
+ -8.54576592e+02  6.31864521e+02  1.94609089e+02 -1.48698593e+02
+  1.66562988e+04 -4.64351177e+03 -5.92154371e+03  8.31860350e+02
+ -6.92210329e+03 -3.31424717e+03 -4.21733448e+03  1.18521456e+03
+  1.25265866e+03 -4.54927002e+02 -4.94101703e+02 -3.22537949e+03
+  9.27011693e+03  3.14498968e+02 -1.05543531e+03  7.39936278e+02
+ -6.21454767e+03 -5.23579385e+02  6.76216968e+03  2.03368342e+03
+ -1.40427724e+03 -8.31587694e+02  2.96681128e+03  6.36560910e+02
+ -6.27296455e+02 -2.79593679e+03 -6.56113001e+03  4.64389391e+03
+  3.31578672e+03 -4.42327289e+03  5.46585348e+02  2.47613681e+03
+ -4.29227594e+03  3.49974956e+03  1.26700261e+04  5.72254211e+03
+  7.05100359e+03  1.72969724e+03  2.60724973e+03  3.03987106e+03
+  1.28093579e+03 -1.21534104e+03  2.63878026e+03  7.16059392e+03
+  1.14876165e+04  3.57051628e+02  1.53062647e+04  2.37754057e+03
+ -6.38306360e+02  2.95814268e+03  1.94209360e+03 -1.81408791e+03
+ -1.97814408e+03  1.57754573e+03  2.92431141e+03  4.59989044e+03
+  1.20005904e+03  1.33675809e+03 -9.21862120e+02  8.59058597e+02
+  1.67707028e+02  3.11944363e+03  4.10933412e+02 -4.15920481e+03
+ -6.14755859e+02 -9.79307605e+02]</code></pre>
+</div>
+</div>
+<div id="afad806d" class="cell" data-execution_count="93">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>feature_names <span class="op">=</span> elastic_net_pipeline.named_steps[<span class="st">'preprocessor'</span>].get_feature_names_out()</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>feature_names</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="93">
+<pre><code>array(['dummify__MS Zoning_C (all)', 'dummify__MS Zoning_FV',
+       'dummify__MS Zoning_I (all)', 'dummify__MS Zoning_RH',
+       'dummify__MS Zoning_RL', 'dummify__MS Zoning_RM',
+       'dummify__Street_Grvl', 'dummify__Street_Pave',
+       'dummify__Lot Shape_IR1', 'dummify__Lot Shape_IR2',
+       'dummify__Lot Shape_IR3', 'dummify__Lot Shape_Reg',
+       'dummify__Land Contour_Bnk', 'dummify__Land Contour_HLS',
+       'dummify__Land Contour_Low', 'dummify__Land Contour_Lvl',
+       'dummify__Utilities_AllPub', 'dummify__Utilities_NoSeWa',
+       'dummify__Utilities_NoSewr', 'dummify__Lot Config_Corner',
+       'dummify__Lot Config_CulDSac', 'dummify__Lot Config_FR2',
+       'dummify__Lot Config_FR3', 'dummify__Lot Config_Inside',
+       'dummify__Land Slope_Gtl', 'dummify__Land Slope_Mod',
+       'dummify__Land Slope_Sev', 'dummify__Neighborhood_Blmngtn',
+       'dummify__Neighborhood_Blueste', 'dummify__Neighborhood_BrDale',
+       'dummify__Neighborhood_BrkSide', 'dummify__Neighborhood_ClearCr',
+       'dummify__Neighborhood_CollgCr', 'dummify__Neighborhood_Crawfor',
+       'dummify__Neighborhood_Edwards', 'dummify__Neighborhood_Gilbert',
+       'dummify__Neighborhood_Greens', 'dummify__Neighborhood_GrnHill',
+       'dummify__Neighborhood_IDOTRR', 'dummify__Neighborhood_Landmrk',
+       'dummify__Neighborhood_MeadowV', 'dummify__Neighborhood_Mitchel',
+       'dummify__Neighborhood_NAmes', 'dummify__Neighborhood_NPkVill',
+       'dummify__Neighborhood_NWAmes', 'dummify__Neighborhood_NoRidge',
+       'dummify__Neighborhood_NridgHt', 'dummify__Neighborhood_OldTown',
+       'dummify__Neighborhood_SWISU', 'dummify__Neighborhood_Sawyer',
+       'dummify__Neighborhood_SawyerW', 'dummify__Neighborhood_Somerst',
+       'dummify__Neighborhood_StoneBr', 'dummify__Neighborhood_Timber',
+       'dummify__Neighborhood_Veenker', 'dummify__Condition 1_Artery',
+       'dummify__Condition 1_Feedr', 'dummify__Condition 1_Norm',
+       'dummify__Condition 1_PosA', 'dummify__Condition 1_PosN',
+       'dummify__Condition 1_RRAe', 'dummify__Condition 1_RRAn',
+       'dummify__Condition 1_RRNe', 'dummify__Condition 1_RRNn',
+       'dummify__Condition 2_Artery', 'dummify__Condition 2_Feedr',
+       'dummify__Condition 2_Norm', 'dummify__Condition 2_PosA',
+       'dummify__Condition 2_PosN', 'dummify__Condition 2_RRAe',
+       'dummify__Condition 2_RRAn', 'dummify__Condition 2_RRNn',
+       'dummify__Bldg Type_1Fam', 'dummify__Bldg Type_2fmCon',
+       'dummify__Bldg Type_Duplex', 'dummify__Bldg Type_Twnhs',
+       'dummify__Bldg Type_TwnhsE', 'dummify__House Style_1.5Fin',
+       'dummify__House Style_1.5Unf', 'dummify__House Style_1Story',
+       'dummify__House Style_2.5Fin', 'dummify__House Style_2.5Unf',
+       'dummify__House Style_2Story', 'dummify__House Style_SFoyer',
+       'dummify__House Style_SLvl', 'dummify__Roof Style_Flat',
+       'dummify__Roof Style_Gable', 'dummify__Roof Style_Gambrel',
+       'dummify__Roof Style_Hip', 'dummify__Roof Style_Mansard',
+       'dummify__Roof Style_Shed', 'dummify__Roof Matl_ClyTile',
+       'dummify__Roof Matl_CompShg', 'dummify__Roof Matl_Membran',
+       'dummify__Roof Matl_Metal', 'dummify__Roof Matl_Roll',
+       'dummify__Roof Matl_Tar&amp;Grv', 'dummify__Roof Matl_WdShake',
+       'dummify__Roof Matl_WdShngl', 'dummify__Exterior 1st_AsbShng',
+       'dummify__Exterior 1st_AsphShn', 'dummify__Exterior 1st_BrkComm',
+       'dummify__Exterior 1st_BrkFace', 'dummify__Exterior 1st_CBlock',
+       'dummify__Exterior 1st_CemntBd', 'dummify__Exterior 1st_HdBoard',
+       'dummify__Exterior 1st_ImStucc', 'dummify__Exterior 1st_MetalSd',
+       'dummify__Exterior 1st_Plywood', 'dummify__Exterior 1st_PreCast',
+       'dummify__Exterior 1st_Stone', 'dummify__Exterior 1st_Stucco',
+       'dummify__Exterior 1st_VinylSd', 'dummify__Exterior 1st_Wd Sdng',
+       'dummify__Exterior 1st_WdShing', 'dummify__Exterior 2nd_AsbShng',
+       'dummify__Exterior 2nd_AsphShn', 'dummify__Exterior 2nd_Brk Cmn',
+       'dummify__Exterior 2nd_BrkFace', 'dummify__Exterior 2nd_CBlock',
+       'dummify__Exterior 2nd_CmentBd', 'dummify__Exterior 2nd_HdBoard',
+       'dummify__Exterior 2nd_ImStucc', 'dummify__Exterior 2nd_MetalSd',
+       'dummify__Exterior 2nd_Other', 'dummify__Exterior 2nd_Plywood',
+       'dummify__Exterior 2nd_PreCast', 'dummify__Exterior 2nd_Stone',
+       'dummify__Exterior 2nd_Stucco', 'dummify__Exterior 2nd_VinylSd',
+       'dummify__Exterior 2nd_Wd Sdng', 'dummify__Exterior 2nd_Wd Shng',
+       'dummify__Exter Qual_Ex', 'dummify__Exter Qual_Fa',
+       'dummify__Exter Qual_Gd', 'dummify__Exter Qual_TA',
+       'dummify__Exter Cond_Ex', 'dummify__Exter Cond_Fa',
+       'dummify__Exter Cond_Gd', 'dummify__Exter Cond_Po',
+       'dummify__Exter Cond_TA', 'dummify__Foundation_BrkTil',
+       'dummify__Foundation_CBlock', 'dummify__Foundation_PConc',
+       'dummify__Foundation_Stone', 'dummify__Foundation_Wood',
+       'dummify__Bsmt Qual_Ex', 'dummify__Bsmt Qual_Fa',
+       'dummify__Bsmt Qual_Gd', 'dummify__Bsmt Qual_Po',
+       'dummify__Bsmt Qual_TA', 'dummify__Bsmt Cond_Ex',
+       'dummify__Bsmt Cond_Fa', 'dummify__Bsmt Cond_Gd',
+       'dummify__Bsmt Cond_Po', 'dummify__Bsmt Cond_TA',
+       'dummify__Bsmt Exposure_Av', 'dummify__Bsmt Exposure_Gd',
+       'dummify__Bsmt Exposure_Mn', 'dummify__Bsmt Exposure_No',
+       'dummify__BsmtFin Type 1_ALQ', 'dummify__BsmtFin Type 1_BLQ',
+       'dummify__BsmtFin Type 1_GLQ', 'dummify__BsmtFin Type 1_LwQ',
+       'dummify__BsmtFin Type 1_Rec', 'dummify__BsmtFin Type 1_Unf',
+       'dummify__BsmtFin Type 2_ALQ', 'dummify__BsmtFin Type 2_BLQ',
+       'dummify__BsmtFin Type 2_GLQ', 'dummify__BsmtFin Type 2_LwQ',
+       'dummify__BsmtFin Type 2_Rec', 'dummify__BsmtFin Type 2_Unf',
+       'dummify__Heating_GasA', 'dummify__Heating_GasW',
+       'dummify__Heating_Grav', 'dummify__Heating_OthW',
+       'dummify__Heating QC_Ex', 'dummify__Heating QC_Fa',
+       'dummify__Heating QC_Gd', 'dummify__Heating QC_Po',
+       'dummify__Heating QC_TA', 'dummify__Central Air_N',
+       'dummify__Central Air_Y', 'dummify__Electrical_FuseA',
+       'dummify__Electrical_FuseF', 'dummify__Electrical_FuseP',
+       'dummify__Electrical_Mix', 'dummify__Electrical_SBrkr',
+       'dummify__Kitchen Qual_Ex', 'dummify__Kitchen Qual_Fa',
+       'dummify__Kitchen Qual_Gd', 'dummify__Kitchen Qual_Po',
+       'dummify__Kitchen Qual_TA', 'dummify__Functional_Maj1',
+       'dummify__Functional_Maj2', 'dummify__Functional_Min1',
+       'dummify__Functional_Min2', 'dummify__Functional_Mod',
+       'dummify__Functional_Sal', 'dummify__Functional_Sev',
+       'dummify__Functional_Typ', 'dummify__Paved Drive_N',
+       'dummify__Paved Drive_P', 'dummify__Paved Drive_Y',
+       'dummify__Sale Type_COD', 'dummify__Sale Type_CWD',
+       'dummify__Sale Type_Con', 'dummify__Sale Type_ConLD',
+       'dummify__Sale Type_ConLI', 'dummify__Sale Type_ConLw',
+       'dummify__Sale Type_New', 'dummify__Sale Type_Oth',
+       'dummify__Sale Type_VWD', 'dummify__Sale Type_WD ',
+       'dummify__Sale Condition_Abnorml',
+       'dummify__Sale Condition_AdjLand',
+       'dummify__Sale Condition_Alloca', 'dummify__Sale Condition_Family',
+       'dummify__Sale Condition_Normal',
+       'dummify__Sale Condition_Partial', 'standardize__MS SubClass',
+       'standardize__Lot Area', 'standardize__Overall Qual',
+       'standardize__Overall Cond', 'standardize__Year Built',
+       'standardize__Year Remod/Add', 'standardize__Mas Vnr Area',
+       'standardize__BsmtFin SF 1', 'standardize__BsmtFin SF 2',
+       'standardize__Bsmt Unf SF', 'standardize__Total Bsmt SF',
+       'standardize__1st Flr SF', 'standardize__2nd Flr SF',
+       'standardize__Low Qual Fin SF', 'standardize__Gr Liv Area',
+       'standardize__Bsmt Full Bath', 'standardize__Bsmt Half Bath',
+       'standardize__Full Bath', 'standardize__Half Bath',
+       'standardize__Bedroom AbvGr', 'standardize__Kitchen AbvGr',
+       'standardize__TotRms AbvGrd', 'standardize__Fireplaces',
+       'standardize__Garage Cars', 'standardize__Garage Area',
+       'standardize__Wood Deck SF', 'standardize__Open Porch SF',
+       'standardize__Enclosed Porch', 'standardize__3Ssn Porch',
+       'standardize__Screen Porch', 'standardize__Pool Area',
+       'standardize__Misc Val', 'standardize__Mo Sold',
+       'standardize__Yr Sold'], dtype=object)</code></pre>
+</div>
+</div>
+<div id="ed5522fc" class="cell" data-execution_count="124">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>coefficients_df4 <span class="op">=</span> pd.DataFrame({<span class="st">'Feature'</span>: feature_names,</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">'Linear Cofficients'</span>: lr_coefficients,</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">'Ridge Cofficients'</span>: ridge_coefficients,</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">'Lasso Coefficients'</span>: lasso_coefficients,</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">'Elastic Coefficients'</span>: default_elastic_net_coefficients})</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>plot_df <span class="op">=</span> coefficients_df4[[<span class="st">'Feature'</span>]].copy()</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>plot_df2 <span class="op">=</span> pd.merge(plot_df, coefficients_df4, left_on <span class="op">=</span> <span class="st">"Feature"</span>, right_on <span class="op">=</span> <span class="st">"Feature"</span>)</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>plot_df2 <span class="op">=</span>  plot_df2.reset_index()</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>plot_df2 <span class="op">=</span> pd.melt(plot_df2, id_vars <span class="op">=</span> [<span class="st">"index"</span>, <span class="st">"Feature"</span>], value_vars<span class="op">=</span> [<span class="st">"Linear Cofficients"</span>, <span class="st">"Ridge Cofficients"</span>, <span class="st">"Lasso Coefficients"</span>, <span class="st">"Elastic Coefficients"</span>], var_name <span class="op">=</span> <span class="st">"Model"</span>, value_name <span class="op">=</span> <span class="st">"Coefficient"</span>)</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>(ggplot(plot_df2, aes(x <span class="op">=</span> <span class="st">"index"</span>, y <span class="op">=</span> <span class="st">"Coefficient"</span>, color <span class="op">=</span> <span class="st">"Model"</span>))<span class="op">+</span></span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>    geom_point()<span class="op">+</span></span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>    labs(title <span class="op">=</span> <span class="st">"Elastic Net vs. Lasso vs. Ridge vs. OLS Coefficients"</span>,</span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>         x <span class="op">=</span> <span class="st">"Coefficient Index"</span>,</span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>         y <span class="op">=</span> <span class="st">"Coefficient"</span>)<span class="op">+</span></span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a>    scale_y_continuous(limits <span class="op">=</span> (<span class="op">-</span><span class="dv">300000</span>, <span class="dv">300000</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/Users/snehanarayanan/anaconda3/lib/python3.11/site-packages/plotnine/layer.py:364: PlotnineWarning: geom_point : Removed 229 rows containing missing values.</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="PracticeAct7.2_files/figure-html/cell-36-output-2.png" width="640" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
